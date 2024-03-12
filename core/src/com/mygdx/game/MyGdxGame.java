@@ -1,31 +1,44 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
 
-public class MyGdxGame extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
-	
+public class MyGdxGame extends Game {
+	private SpriteBatch batch;
+	private StartScreen startScreen;
+	private GameScreen gameScreen;
+
+	public static final int START_SCREEN = 0;
+	public static final int GAME_SCREEN = 1;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		startScreen = new StartScreen(batch);
+		gameScreen = new GameScreen(batch);
+		// Configura la pantalla de inicio como la pantalla actual del juego
+		setScreen(startScreen);
 	}
 
 	@Override
-	public void render () {
-		ScreenUtils.clear(1, 0, 0, 1);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
-	}
-	
-	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+		startScreen.dispose();
+		gameScreen.dispose();
+	}
+
+	public void changeScreen(int screen) {
+		// Cambia a la pantalla deseada
+		Screen newScreen = null;
+		switch (screen) {
+			case START_SCREEN:
+				newScreen = startScreen;
+				break;
+			case GAME_SCREEN:
+				newScreen = gameScreen;
+				break;
+		}
+		setScreen(newScreen);
 	}
 }
