@@ -12,6 +12,10 @@ public class AssetManagerWrapper {
 
     public static void load() {
         knightSheet = new Texture(Gdx.files.internal("Fire_Warrior-Sheet.png"));
-        knight = new TextureRegion(knightSheet, 0, 0, 30, 30);
+        knight = new TextureRegion(knightSheet, 0, 0, 27, 47);
+    }
+
+    public static void dispose() {
+        knightSheet.dispose();
     }
 }
