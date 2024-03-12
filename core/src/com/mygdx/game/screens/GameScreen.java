@@ -7,12 +7,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameScreen implements Screen {
     private final SpriteBatch batch;
-    private Background gameBackground;
+    private Background background;
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
         // Crea el fondo del juego
-        gameBackground = new Background("BackgroundTree/background1.png");
+        background = new Background();
     }
 
     @Override
@@ -22,14 +22,22 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        // Actualiza la lógica del juego
+        update(delta);
+
         // Limpia la pantalla
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
         // Dibuja el fondo del juego
-        gameBackground.draw(batch);
+        background.draw(batch);
         batch.end();
+    }
+
+    private void update(float delta) {
+        // Actualiza la lógica del fondo del juego
+        background.update(delta);
     }
 
     @Override
@@ -55,6 +63,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         // Libera los recursos del fondo del juego
-        gameBackground.dispose();
+        background.dispose();
     }
 }
