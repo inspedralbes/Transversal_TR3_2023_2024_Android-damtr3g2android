@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.objects.DemonFly;
 import com.mygdx.game.objects.Witch;
 
 public class GameScreen implements Screen {
@@ -12,12 +13,16 @@ public class GameScreen implements Screen {
     private Background background;
     private Witch witch;
 
+    private DemonFly demonFly;
+
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
         // Crea el fondo del juego
         background = new Background();
         // Crea la bruja del juego en la posición inicial
         witch = new Witch(new Vector2(100, 100)); // Por ejemplo, posición (100, 100)
+        demonFly = new DemonFly(new Vector2(300, 0)); // Por ejemplo, posición (100, 100)
+
     }
 
     @Override
@@ -39,6 +44,8 @@ public class GameScreen implements Screen {
         background.draw(batch);
         // Dibuja la bruja del juego
         witch.render(batch);
+
+        demonFly.render(batch);
         batch.end();
     }
 
@@ -47,6 +54,7 @@ public class GameScreen implements Screen {
         background.update(delta);
         // Actualiza la lógica de la bruja del juego
         witch.update(delta);
+        demonFly.update(delta);
     }
 
     @Override
@@ -77,5 +85,6 @@ public class GameScreen implements Screen {
         background.dispose();
         // Libera los recursos de la bruja del juego
         witch.dispose();
+        demonFly.dispose();
     }
 }
