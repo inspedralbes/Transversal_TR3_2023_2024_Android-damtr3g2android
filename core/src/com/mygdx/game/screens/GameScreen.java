@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.objects.DemonFly;
 import com.mygdx.game.objects.Knight;
+import com.mygdx.game.objects.Rana;
 import com.mygdx.game.objects.Witch;
 
 public class GameScreen implements Screen {
@@ -19,6 +20,8 @@ public class GameScreen implements Screen {
 
     private DemonFly demonFly;
 
+    private Rana rana;
+
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
         // Crea el fondo del juego
@@ -29,6 +32,8 @@ public class GameScreen implements Screen {
 
         knightWalk = new Knight(new Vector2(300, 100), 2, 8); // Por ejemplo, posición (100, 100)
         knightAttack = new Knight(new Vector2(300, 100), 9, 5); // Por ejemplo, posición (100, 100)
+
+        rana = new Rana(new Vector2(500, 100)); // Por ejemplo, posición (100, 100)
     }
 
     @Override
@@ -57,6 +62,7 @@ public class GameScreen implements Screen {
         } else {
             knightWalk.render(batch);
         }
+        rana.render(batch);
         batch.end();
     }
 
@@ -79,6 +85,7 @@ public class GameScreen implements Screen {
         } else {
             knightWalk.update(delta);
         }
+        rana.update(delta);
     }
 
     @Override
@@ -111,5 +118,6 @@ public class GameScreen implements Screen {
         demonFly.dispose();
         knightWalk.dispose();
         knightAttack.dispose();
+        rana.dispose();
     }
 }
