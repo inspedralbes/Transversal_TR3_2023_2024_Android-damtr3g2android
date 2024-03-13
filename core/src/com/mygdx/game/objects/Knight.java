@@ -46,19 +46,22 @@ public class Knight extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        batch.draw(getKnightTexture(), position.x, position.y, width, height);
-    }
-
-    public TextureRegion getKnightTexture() {
-
-        switch (direction) {
-
-            case KNIGHT:
-                return AssetManagerWrapper.knight;
-            default:
-                return AssetManagerWrapper.knight;
+        TextureRegion knightTexture = getKnightTexture();
+        if (knightTexture != null) {
+            batch.draw(knightTexture, position.x, position.y, width, height);
         }
     }
 
-
+    public TextureRegion getKnightTexture() {
+        TextureRegion textureRegion = null;
+        switch (direction) {
+            case KNIGHT:
+                textureRegion = AssetManagerWrapper.knight;
+                break;
+            // Add more cases for other directions if needed
+            default:
+                break;
+        }
+        return textureRegion;
+    }
 }
