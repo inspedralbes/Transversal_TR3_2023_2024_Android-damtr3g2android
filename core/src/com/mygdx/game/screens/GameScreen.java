@@ -4,15 +4,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.objects.Witch;
 
 public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private Background background;
+    private Witch witch;
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
         // Crea el fondo del juego
         background = new Background();
+        // Crea la bruja del juego en la posición inicial
+        witch = new Witch(new Vector2(100, 100)); // Por ejemplo, posición (100, 100)
     }
 
     @Override
@@ -32,12 +37,16 @@ public class GameScreen implements Screen {
         batch.begin();
         // Dibuja el fondo del juego
         background.draw(batch);
+        // Dibuja la bruja del juego
+        witch.render(batch);
         batch.end();
     }
 
     private void update(float delta) {
         // Actualiza la lógica del fondo del juego
         background.update(delta);
+        // Actualiza la lógica de la bruja del juego
+        witch.update(delta);
     }
 
     @Override
@@ -66,5 +75,7 @@ public class GameScreen implements Screen {
     public void dispose() {
         // Libera los recursos del fondo del juego
         background.dispose();
+        // Libera los recursos de la bruja del juego
+        witch.dispose();
     }
 }
