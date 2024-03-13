@@ -91,8 +91,9 @@ public class DemonFly {
         // Dibujar el fotograma actual con la escala calculada
         if (isAttacking) {
             // Mover ligeramente a la izquierda durante el ataque
-            float attackPositionX = position.x - 150; // Ajusta este valor según sea necesario
-            batch.draw(attackFrames[currentFrameIndex], attackPositionX, position.y, FRAME_WIDTH_ATTACK * scale, FRAME_HEIGHT * scale);
+            float attackPositionX = position.x - 250; // Ajusta este valor según sea necesario
+            float attackPositionY = position.y +100;
+            batch.draw(attackFrames[currentFrameIndex], attackPositionX, attackPositionY, FRAME_WIDTH_ATTACK * scale, FRAME_HEIGHT * scale);
         } else {
             batch.draw(idleFrames[currentFrameIndex], position.x, position.y, FRAME_WIDTH_IDLE * scale, FRAME_HEIGHT * scale);
         }
