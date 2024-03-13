@@ -1,6 +1,5 @@
 package com.mygdx.game.objects;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,10 +13,10 @@ public class Rana {
     private Vector2 position;
     private Rectangle bounds;
 
-    private static final int FRAME_WIDTH = 64;
-    private static final int FRAME_HEIGHT = 80;
-    private static final int FRAMES_IN_COLUMN = 4; // Cambiado a 4
-    private static final float FRAME_DURATION = 0.1f;
+    private static final int FRAME_WIDTH = 80;
+    private static final int FRAME_HEIGHT = 64;
+    private static final int FRAMES_IN_COLUMN = 4;
+    private static final float FRAME_DURATION = 0.3f;
 
     private float stateTime;
 
@@ -26,7 +25,7 @@ public class Rana {
         frames = new TextureRegion[FRAMES_IN_COLUMN];
 
         for (int i = 0; i < FRAMES_IN_COLUMN; i++) {
-            frames[i] = new TextureRegion(spriteSheet, 0, i * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
+            frames[i] = new TextureRegion(spriteSheet, i * FRAME_WIDTH, 0, FRAME_WIDTH, FRAME_HEIGHT);
         }
 
         // Ajustar la posición inicial para que aparezca en la derecha de la pantalla
