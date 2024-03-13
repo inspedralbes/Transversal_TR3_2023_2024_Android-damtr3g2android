@@ -9,8 +9,8 @@ public class Background {
     private Texture staticBackground;
     private Texture movingBackground2;
     private Texture movingBackground3;
-    private float scrollSpeed2 = 15f; // Velocidad de desplazamiento de background2
-    private float scrollSpeed3 = 30f; // Velocidad de desplazamiento de background3
+    private float scrollSpeed2 = 75f; // Velocidad de desplazamiento de background2
+    private float scrollSpeed3 = 150f; // Velocidad de desplazamiento de background3
 
     private float scrollX2 = 0;
     private float scrollX3 = 0;
