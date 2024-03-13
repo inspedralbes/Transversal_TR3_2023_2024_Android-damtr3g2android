@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Knight {
-    private TextureRegion[] framesCaminar;
+    private TextureRegion[] frames;
     private int currentFrameIndex;
     private int totalFrames;
     private Vector2 position;
@@ -18,19 +18,22 @@ public class Knight {
     private static final int SPRITESHEET_ROWS = 25;
     private static final float FRAME_DURATION = 0.1f;
 
+    private static final int FRAME_WIDTH = 47;
+    private static final int FRAME_HEIGHT = 27;
+
     private float stateTime;
 
     public Knight(Vector2 position, int fila, int columna) {
         Texture spriteSheet = new Texture(Gdx.files.internal("Fire_Warrior-Sheet.png"));
 
-        framesCaminar = new TextureRegion[columna];
+        frames = new TextureRegion[columna];
         int frameWidth = spriteSheet.getWidth() / SPRITESHEET_COLS;
         int frameHeight = spriteSheet.getHeight() / SPRITESHEET_ROWS;
 
         int rowIndex = fila; // Índice de la tercera fila (empezando desde 0)
 
         for (int j = 0; j < columna; j++) {
-            framesCaminar[j] = new TextureRegion(spriteSheet, j * frameWidth, rowIndex * frameHeight, frameWidth, frameHeight);
+            frames[j] = new TextureRegion(spriteSheet, j * frameWidth, rowIndex * frameHeight, frameWidth, frameHeight);
         }
 
         this.position = position;
@@ -48,7 +51,15 @@ public class Knight {
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(framesCaminar[currentFrameIndex], position.x, position.y);
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+
+        // Calcular la escala en función del ancho de la pantalla
+        float scale = screenWidth / 800f; // Suponiendo que el tamaño base de la bruja sea para una pantalla de ancho 800
+        scale *= 5f; // Aumentar la escala en un 50%
+
+        // Dibujar el fotograma actual con la escala calculada
+        batch.draw(frames[currentFrameIndex], position.x, position.y, FRAME_WIDTH * scale, FRAME_HEIGHT * scale);
     }
 
     public Rectangle getBounds() {
@@ -70,6 +81,6 @@ public class Knight {
     }
 
     public void dispose() {
-        framesCaminar[0].getTexture().dispose();
+        frames[0].getTexture().dispose();
     }
 }
