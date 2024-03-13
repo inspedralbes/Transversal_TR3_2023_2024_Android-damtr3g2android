@@ -17,7 +17,7 @@ public class Rana {
     private static final int FRAME_HEIGHT = 64;
     private static final int FRAMES_IN_COLUMN = 4;
     private static final float FRAME_DURATION = 0.3f;
-    private static final float SPEED = 100f; // Velocidad de movimiento en píxeles por segundo
+    private static final float SPEED = 180f; // Velocidad de movimiento en píxeles por segundo
 
     private float stateTime;
 
