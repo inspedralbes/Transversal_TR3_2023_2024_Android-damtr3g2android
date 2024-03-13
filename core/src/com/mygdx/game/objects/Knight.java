@@ -1,8 +1,11 @@
 package com.mygdx.game.objects;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.game.AssetManagerWrapper;
 
 public class Knight extends Actor {
 
@@ -38,6 +41,23 @@ public class Knight extends Actor {
         position = new Vector2(x, y);
         direction = KNIGHT;
         collisionRect = new Rectangle();
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
+        batch.draw(getKnightTexture(), position.x, position.y, width, height);
+    }
+
+    public TextureRegion getKnightTexture() {
+
+        switch (direction) {
+
+            case KNIGHT:
+                return AssetManagerWrapper.knight;
+            default:
+                return AssetManagerWrapper.knight;
+        }
     }
 
 

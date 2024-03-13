@@ -19,6 +19,7 @@ public class MyGdxGame extends Game {
 		batch = new SpriteBatch();
 		startScreen = new StartScreen(batch);
 		gameScreen = new GameScreen(batch);
+		AssetManagerWrapper.load();
 		// Configura la pantalla de inicio como la pantalla actual del juego
 		setScreen(startScreen);
 	}
