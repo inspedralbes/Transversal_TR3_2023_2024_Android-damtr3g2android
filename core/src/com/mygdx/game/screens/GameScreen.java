@@ -3,15 +3,34 @@ package com.mygdx.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+<<<<<<< Updated upstream
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+=======
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
+>>>>>>> Stashed changes
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.game.objects.Knight;
 
 public class GameScreen implements Screen {
+<<<<<<< Updated upstream
     private final SpriteBatch batch;
     private Texture gameBackground;
+=======
+    private final Batch batch;
+    private Background background;
+>>>>>>> Stashed changes
 
-    public GameScreen(SpriteBatch batch) {
+    private Stage stage;
+    private Knight knight;
+    private ShapeRenderer shapeRenderer;
+
+    public GameScreen(Batch batch) {
+        shapeRenderer = new ShapeRenderer();
+        OrthographicCamera camera = new OrthographicCamera(500, 500);
         this.batch = batch;
         // Crea la textura del fondo del juego programáticamente
         createGameBackground();
