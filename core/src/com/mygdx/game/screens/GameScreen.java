@@ -1,6 +1,7 @@
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,7 +13,8 @@ public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private Background background;
     private Witch witch;
-    private Knight knight;
+    private Knight knightWalk, knightAttack;
+    private boolean isAttacking = false;
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
@@ -20,7 +22,8 @@ public class GameScreen implements Screen {
         background = new Background();
         // Crea la bruja del juego en la posición inicial
         witch = new Witch(new Vector2(100, 100)); // Por ejemplo, posición (100, 100)
-        knight = new Knight(new Vector2(300, 100)); // Por ejemplo, posición (100, 100)
+        knightWalk = new Knight(new Vector2(300, 100), 2, 8); // Por ejemplo, posición (100, 100)
+        knightAttack = new Knight(new Vector2(300, 100), 9, 5); // Por ejemplo, posición (100, 100)
     }
 
     @Override
@@ -42,7 +45,11 @@ public class GameScreen implements Screen {
         background.draw(batch);
         // Dibuja la bruja del juego
         witch.render(batch);
-        knight.render(batch);
+        if (isAttacking) {
+            knightAttack.render(batch);
+        } else {
+            knightWalk.render(batch);
+        }
         batch.end();
     }
 
@@ -51,7 +58,19 @@ public class GameScreen implements Screen {
         background.update(delta);
         // Actualiza la lógica de la bruja del juego
         witch.update(delta);
-        knight.update(delta);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A) && !isAttacking) {
+            isAttacking = true;
+            // Reinicia la animación de ataque
+            knightAttack.resetAnimation();
+        }
+        if (isAttacking) {
+            knightAttack.update(delta);
+            if (knightAttack.isAnimationFinished()) {
+                isAttacking = false;
+            }
+        } else {
+            knightWalk.update(delta);
+        }
     }
 
     @Override
@@ -59,7 +78,6 @@ public class GameScreen implements Screen {
         // Actualiza el viewport del Batch
         batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
     }
-
 
     @Override
     public void pause() {
@@ -82,6 +100,7 @@ public class GameScreen implements Screen {
         background.dispose();
         // Libera los recursos de la bruja del juego
         witch.dispose();
-        knight.dispose();
+        knightWalk.dispose();
+        knightAttack.dispose();
     }
 }

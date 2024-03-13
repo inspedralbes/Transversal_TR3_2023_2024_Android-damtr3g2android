@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Knight {
     private TextureRegion[] framesCaminar;
     private int currentFrameIndex;
+    private int totalFrames;
     private Vector2 position;
     private Rectangle bounds;
 
@@ -19,29 +20,29 @@ public class Knight {
 
     private float stateTime;
 
-    public Knight(Vector2 position) {
+    public Knight(Vector2 position, int fila, int columna) {
         Texture spriteSheet = new Texture(Gdx.files.internal("Fire_Warrior-Sheet.png"));
 
-        framesCaminar = new TextureRegion[8];
+        framesCaminar = new TextureRegion[columna];
         int frameWidth = spriteSheet.getWidth() / SPRITESHEET_COLS;
         int frameHeight = spriteSheet.getHeight() / SPRITESHEET_ROWS;
 
-        int rowIndex = 2; // Índice de la tercera fila (empezando desde 0)
+        int rowIndex = fila; // Índice de la tercera fila (empezando desde 0)
 
-        for (int j = 0; j < 8; j++) {
-            int index = rowIndex * SPRITESHEET_COLS + j;
+        for (int j = 0; j < columna; j++) {
             framesCaminar[j] = new TextureRegion(spriteSheet, j * frameWidth, rowIndex * frameHeight, frameWidth, frameHeight);
         }
 
         this.position = position;
         this.bounds = new Rectangle(position.x, position.y, frameWidth, frameHeight);
+        this.totalFrames = columna;
     }
 
     public void update(float delta) {
         stateTime += delta;
 
         if (stateTime >= FRAME_DURATION) {
-            currentFrameIndex = (currentFrameIndex + 1) % framesCaminar.length;
+            currentFrameIndex = (currentFrameIndex + 1) % totalFrames;
             stateTime = 0;
         }
     }
@@ -54,9 +55,18 @@ public class Knight {
         return bounds;
     }
 
+    public boolean isAnimationFinished() {
+        return currentFrameIndex == totalFrames - 1;
+    }
+
     public void setPosition(Vector2 position) {
         this.position = position;
         bounds.setPosition(position);
+    }
+
+    public void resetAnimation() {
+        currentFrameIndex = 0; // Reiniciar la animación al primer cuadro
+        stateTime = 0; // Reiniciar el tiempo de animación
     }
 
     public void dispose() {
