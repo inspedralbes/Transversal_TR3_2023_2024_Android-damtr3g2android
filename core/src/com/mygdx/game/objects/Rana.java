@@ -43,7 +43,15 @@ public class Rana {
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(frames[currentFrameIndex], position.x, position.y);
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+
+        // Calcular la escala en función del ancho de la pantalla
+        float scale = screenWidth / 800f; // Suponiendo que el tamaño base de la bruja sea para una pantalla de ancho 800
+        scale *= 2.7f; // Aumentar la escala en un 50%
+
+        // Dibujar el fotograma actual con la escala calculada
+        batch.draw(frames[currentFrameIndex], position.x, position.y, FRAME_WIDTH * scale, FRAME_HEIGHT * scale);
     }
 
     public Rectangle getBounds() {
