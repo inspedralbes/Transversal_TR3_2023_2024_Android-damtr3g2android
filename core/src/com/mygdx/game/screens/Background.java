@@ -1,7 +1,6 @@
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -9,9 +8,11 @@ public class Background {
     private Texture staticBackground;
     private Texture movingBackground2;
     private Texture movingBackground3;
+    private float scrollSpeed1 = 25f; // Velocidad de desplazamiento de background1
     private float scrollSpeed2 = 75f; // Velocidad de desplazamiento de background2
     private float scrollSpeed3 = 150f; // Velocidad de desplazamiento de background3
 
+    private float scrollX1 = 0;
     private float scrollX2 = 0;
     private float scrollX3 = 0;
 
@@ -22,6 +23,13 @@ public class Background {
     }
 
     public void update(float delta) {
+        // Actualiza la posición del fondo estático
+        scrollX1 -= scrollSpeed1 * delta;
+        // Si el fondo se ha movido completamente fuera de la pantalla, resetea su posición
+        if (scrollX1 <= -Gdx.graphics.getWidth()) {
+            scrollX1 = 0;
+        }
+
         // Actualiza la posición del fondo en movimiento 2
         scrollX2 -= scrollSpeed2 * delta;
         // Si el fondo se ha movido completamente fuera de la pantalla, resetea su posición
@@ -39,11 +47,15 @@ public class Background {
 
     public void draw(SpriteBatch batch) {
         // Dibuja el fondo estático
-        batch.draw(staticBackground, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(staticBackground, scrollX1, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        // Dibuja otra copia del fondo estático para simular el desplazamiento continuo
+        batch.draw(staticBackground, scrollX1 + Gdx.graphics.getWidth(), 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
         // Dibuja el fondo en movimiento 2
         batch.draw(movingBackground2, scrollX2, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         // Dibuja otra copia del fondo en movimiento 2 para simular el desplazamiento continuo
         batch.draw(movingBackground2, scrollX2 + Gdx.graphics.getWidth(), 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
         // Dibuja el fondo en movimiento 3
         batch.draw(movingBackground3, scrollX3, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         // Dibuja otra copia del fondo en movimiento 3 para simular el desplazamiento continuo
