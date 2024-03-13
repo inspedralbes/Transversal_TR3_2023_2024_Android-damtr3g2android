@@ -42,8 +42,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // Este método se llama cuando el tamaño de la pantalla cambia
+        // Actualiza el viewport del Batch
+        batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
     }
+
 
     @Override
     public void pause() {

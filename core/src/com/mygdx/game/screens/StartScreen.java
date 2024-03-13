@@ -8,9 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.MyGdxGame;
 
 public class StartScreen implements Screen {
@@ -28,19 +26,22 @@ public class StartScreen implements Screen {
         font.setColor(Color.WHITE);
         font.getData().setScale(2);
 
-        // Define el área del botón de inicio (por ahora, un rectángulo simple)
-        startButton = new Rectangle(300, 200, 200, 50);
+        // Define el área del botón de inicio centrado en la pantalla
+        float buttonWidth = Gdx.graphics.getWidth() / 4;
+        float buttonHeight = Gdx.graphics.getHeight() / 15;
+        float buttonX = (Gdx.graphics.getWidth() - buttonWidth) / 2;
+        float buttonY = (Gdx.graphics.getHeight() - buttonHeight) / 2;
+        startButton = new Rectangle(buttonX, buttonY, buttonWidth, buttonHeight);
     }
 
     private void createStartScreenTexture() {
-        Pixmap pixmap = new Pixmap(800, 600, Pixmap.Format.RGBA8888);
-        // Llena el pixmap con un color rojo oscuro
+        // Crea una textura a partir de la pantalla completa
+        startScreenTexture = new Texture(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+        // Llena la textura con un color rojo oscuro
+        Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.RED);
         pixmap.fill();
-
-        // Crea una textura a partir del pixmap
-        startScreenTexture = new Texture(pixmap);
-
+        startScreenTexture.draw(pixmap, 0, 0);
         // Libera el pixmap, ya que no lo necesitamos más
         pixmap.dispose();
     }
@@ -81,8 +82,21 @@ public class StartScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // Este método se llama cuando el tamaño de la pantalla cambia
+        // Reajusta el tamaño y la posición del botón de inicio al cambiar el tamaño de la ventana
+        float buttonWidth = width / 4;
+        float buttonHeight = height / 15;
+        float buttonX = (width - buttonWidth) / 2;
+        float buttonY = (height - buttonHeight) / 2;
+        startButton.set(buttonX, buttonY, buttonWidth, buttonHeight);
+
+        // Actualiza el tamaño de la textura de fondo al cambiar el tamaño de la ventana
+        startScreenTexture.dispose();
+        createStartScreenTexture();
+
+        // Actualiza el viewport del Batch
+        batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
     }
+
 
     @Override
     public void pause() {
