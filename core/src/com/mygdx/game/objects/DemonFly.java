@@ -43,11 +43,13 @@ public class DemonFly {
             attackFrames[i] = new TextureRegion(attackSpriteSheet, i * FRAME_WIDTH_ATTACK, 0, FRAME_WIDTH_ATTACK, FRAME_HEIGHT);
         }
 
-        this.position = position;
+        // Ajustar la posición del demonio más abajo
+        this.position = new Vector2(position.x, 0); // Ajustar la posición Y aquí
         this.bounds = new Rectangle(position.x, position.y, FRAME_WIDTH_IDLE, FRAME_HEIGHT);
         this.isAttacking = false;
         this.attackTimer = 0f;
     }
+
 
     public void update(float delta) {
         // Actualizar el tiempo de estado para controlar la animación
@@ -85,7 +87,6 @@ public class DemonFly {
 
         // Calcular la escala en función del ancho de la pantalla
         float scale = screenWidth / 800f; // Suponiendo que el tamaño base del DemonFly sea para una pantalla de ancho 800
-        scale *= 4f; // Aumentar la escala en un 50%
 
         // Dibujar el fotograma actual con la escala calculada
         if (isAttacking) {
