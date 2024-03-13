@@ -21,7 +21,7 @@ public class GameScreen implements Screen {
         background = new Background();
         // Crea la bruja del juego en la posición inicial
         witch = new Witch(new Vector2(100, 100)); // Por ejemplo, posición (100, 100)
-        demonFly = new DemonFly(new Vector2(300, 0)); // Por ejemplo, posición (100, 100)
+        demonFly = new DemonFly(new Vector2(300, 100)); // Por ejemplo, posición (100, 100)
 
     }
 
