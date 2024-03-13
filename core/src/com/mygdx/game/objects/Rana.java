@@ -17,6 +17,7 @@ public class Rana {
     private static final int FRAME_HEIGHT = 64;
     private static final int FRAMES_IN_COLUMN = 4;
     private static final float FRAME_DURATION = 0.3f;
+    private static final float SPEED = 100f; // Velocidad de movimiento en píxeles por segundo
 
     private float stateTime;
 
@@ -29,17 +30,29 @@ public class Rana {
         }
 
         // Ajustar la posición inicial para que aparezca en la derecha de la pantalla
-        this.position = new Vector2(Gdx.graphics.getWidth() - FRAME_WIDTH, position.y);
+        this.position = new Vector2(Gdx.graphics.getWidth(), position.y);
         this.bounds = new Rectangle(this.position.x, this.position.y, FRAME_WIDTH, FRAME_HEIGHT);
     }
 
     public void update(float delta) {
         stateTime += delta;
+
+        // Mover la rana hacia la izquierda
+        position.x -= SPEED * delta;
+
+        // Comprobar si la rana ha salido de la pantalla
+        if (position.x + FRAME_WIDTH < 0) {
+            // Reiniciar la posición de la rana a la derecha de la pantalla
+            position.x = Gdx.graphics.getWidth();
+        }
+
+        // Actualizar los fotogramas de animación
         if (stateTime >= FRAME_DURATION) {
-            currentFrameIndex = (currentFrameIndex + 1) % frames.length;
+            currentFrameIndex = (currentFrameIndex - 1 + frames.length) % frames.length; // Cambio aquí
             stateTime = 0;
         }
     }
+
 
     public void render(SpriteBatch batch) {
         float screenWidth = Gdx.graphics.getWidth();
@@ -55,11 +68,6 @@ public class Rana {
 
     public Rectangle getBounds() {
         return bounds;
-    }
-
-    public void setPosition(Vector2 position) {
-        this.position = position;
-        bounds.setPosition(position);
     }
 
     public void dispose() {
