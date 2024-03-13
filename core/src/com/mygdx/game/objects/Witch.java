@@ -3,28 +3,53 @@ package com.mygdx.game.objects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Witch {
-    private Texture texture;
+    private TextureRegion[] frames;
+    private int currentFrameIndex;
     private Vector2 position;
     private Rectangle bounds;
 
+    private static final int FRAME_WIDTH = 36;
+    private static final int FRAME_HEIGHT = 48;
+    private static final int FRAMES_IN_COLUMN = 6;
+    private static final float FRAME_DURATION = 0.1f; // Tiempo entre cambios de fotograma
+
+    private float stateTime;
+
     public Witch(Vector2 position) {
-        // Cargar la textura desde el archivo interno witch.png
-        texture = new Texture(Gdx.files.internal("Witch/B_witch_idle.png"));
+        // Cargar el spritesheet desde el archivo interno witch.png
+        Texture spriteSheet = new Texture(Gdx.files.internal("Witch/B_witch_idle.png"));
+
+        // Crear un array de regiones de textura para almacenar los cuadros individuales
+        frames = new TextureRegion[FRAMES_IN_COLUMN];
+
+        // Dividir el spritesheet en regiones de textura individuales
+        for (int i = 0; i < FRAMES_IN_COLUMN; i++) {
+            frames[i] = new TextureRegion(spriteSheet, 0, i * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
+        }
 
         this.position = position;
-        this.bounds = new Rectangle(position.x, position.y, texture.getWidth(), texture.getHeight());
+        this.bounds = new Rectangle(position.x, position.y, FRAME_WIDTH, FRAME_HEIGHT);
     }
 
     public void update(float delta) {
-        // Aquí puedes agregar lógica de actualización, como movimiento o interacción con otros objetos.
+        // Actualizar el tiempo de estado para controlar la animación
+        stateTime += delta;
+
+        // Cambiar de fotograma cuando haya pasado el tiempo de duración de un fotograma
+        if (stateTime >= FRAME_DURATION) {
+            currentFrameIndex = (currentFrameIndex + 1) % frames.length;
+            stateTime = 0;
+        }
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(texture, position.x, position.y);
+        // Dibujar el fotograma actual
+        batch.draw(frames[currentFrameIndex], position.x, position.y);
     }
 
     public Rectangle getBounds() {
@@ -39,6 +64,7 @@ public class Witch {
 
     // Método para liberar recursos cuando ya no se necesiten.
     public void dispose() {
-        texture.dispose();
+        // Liberar la textura del spritesheet
+        frames[0].getTexture().dispose();
     }
 }

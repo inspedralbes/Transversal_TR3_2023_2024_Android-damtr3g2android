@@ -1,64 +1,65 @@
 package com.mygdx.game.objects;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.mygdx.game.AssetManagerWrapper;
 
-public class Knight extends Actor {
-
-    public static final int KNIGHT = 0;
-
+public class Knight {
+    private TextureRegion[] framesCaminar;
+    private int currentFrameIndex;
     private Vector2 position;
-    private int width, height;
-    private int direction;
-    private Rectangle collisionRect;
+    private Rectangle bounds;
 
-    public Vector2 getPosition() {
-        return position;
-    }
-    public float getX() {
-        return position.x;
-    }
-    public float getY() {
-        return position.y;
-    }
-    public float getWidth() {
-        return width;
-    }
-    public float getHeight() {
-        return height;
-    }
-    public Rectangle getCollisionRect() {
-        return collisionRect;
-    }
+    private static final int SPRITESHEET_COLS = 16;
+    private static final int SPRITESHEET_ROWS = 25;
+    private static final float FRAME_DURATION = 0.1f;
 
-    public Knight(float x, float y, int width, int height) {
-        this.width = width;
-        this.height = height;
-        position = new Vector2(x, y);
-        direction = KNIGHT;
-        collisionRect = new Rectangle();
+    private float stateTime;
+
+    public Knight(Vector2 position) {
+        Texture spriteSheet = new Texture(Gdx.files.internal("Fire_Warrior-Sheet.png"));
+
+        framesCaminar = new TextureRegion[8];
+        int frameWidth = spriteSheet.getWidth() / SPRITESHEET_COLS;
+        int frameHeight = spriteSheet.getHeight() / SPRITESHEET_ROWS;
+
+        int rowIndex = 2; // Índice de la tercera fila (empezando desde 0)
+
+        for (int j = 0; j < 8; j++) {
+            int index = rowIndex * SPRITESHEET_COLS + j;
+            framesCaminar[j] = new TextureRegion(spriteSheet, j * frameWidth, rowIndex * frameHeight, frameWidth, frameHeight);
+        }
+
+        this.position = position;
+        this.bounds = new Rectangle(position.x, position.y, frameWidth, frameHeight);
     }
 
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
-        batch.draw(getKnightTexture(), position.x, position.y, width, height);
-    }
+    public void update(float delta) {
+        stateTime += delta;
 
-    public TextureRegion getKnightTexture() {
-
-        switch (direction) {
-
-            case KNIGHT:
-                return AssetManagerWrapper.knight;
-            default:
-                return AssetManagerWrapper.knight;
+        if (stateTime >= FRAME_DURATION) {
+            currentFrameIndex = (currentFrameIndex + 1) % framesCaminar.length;
+            stateTime = 0;
         }
     }
 
+    public void render(SpriteBatch batch) {
+        batch.draw(framesCaminar[currentFrameIndex], position.x, position.y);
+    }
 
+    public Rectangle getBounds() {
+        return bounds;
+    }
+
+    public void setPosition(Vector2 position) {
+        this.position = position;
+        bounds.setPosition(position);
+    }
+
+    public void dispose() {
+        framesCaminar[0].getTexture().dispose();
+    }
 }
