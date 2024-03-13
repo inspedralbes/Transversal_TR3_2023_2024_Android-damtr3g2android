@@ -13,16 +13,16 @@ public class Witch {
     private Vector2 position;
     private Rectangle bounds;
 
-    private static final int FRAME_WIDTH = 36;
+    private static final int FRAME_WIDTH = 48;
     private static final int FRAME_HEIGHT = 48;
-    private static final int FRAMES_IN_COLUMN = 6;
+    private static final int FRAMES_IN_COLUMN = 5;
     private static final float FRAME_DURATION = 0.1f; // Tiempo entre cambios de fotograma
 
     private float stateTime;
 
     public Witch(Vector2 position) {
         // Cargar el spritesheet desde el archivo interno witch.png
-        Texture spriteSheet = new Texture(Gdx.files.internal("Witch/B_witch_idle.png"));
+        Texture spriteSheet = new Texture(Gdx.files.internal("Witch/B_witch_charge.png"));
 
         // Crear un array de regiones de textura para almacenar los cuadros individuales
         frames = new TextureRegion[FRAMES_IN_COLUMN];
