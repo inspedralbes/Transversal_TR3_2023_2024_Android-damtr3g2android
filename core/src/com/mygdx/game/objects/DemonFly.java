@@ -59,7 +59,7 @@ public class DemonFly {
         attackTimer += delta;
 
         // Si han pasado 10 segundos, iniciar el ataque y reiniciar el temporizador
-        if (attackTimer >= 10f) {
+        if (attackTimer >= 5f) {
             startAttack();
             attackTimer = 0f;
         }
@@ -90,11 +90,14 @@ public class DemonFly {
 
         // Dibujar el fotograma actual con la escala calculada
         if (isAttacking) {
-            batch.draw(attackFrames[currentFrameIndex], position.x, position.y, FRAME_WIDTH_ATTACK * scale, FRAME_HEIGHT * scale);
+            // Mover ligeramente a la izquierda durante el ataque
+            float attackPositionX = position.x - 150; // Ajusta este valor según sea necesario
+            batch.draw(attackFrames[currentFrameIndex], attackPositionX, position.y, FRAME_WIDTH_ATTACK * scale, FRAME_HEIGHT * scale);
         } else {
             batch.draw(idleFrames[currentFrameIndex], position.x, position.y, FRAME_WIDTH_IDLE * scale, FRAME_HEIGHT * scale);
         }
     }
+
 
     public void startAttack() {
         isAttacking = true;
