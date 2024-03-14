@@ -50,6 +50,15 @@ public class Knight {
         }
     }
 
+    public void updateSalto(float delta) {
+        stateTime += delta;
+
+        if (stateTime >= 0.15f) {
+            currentFrameIndex = (currentFrameIndex + 1) % totalFrames;
+            stateTime = 0;
+        }
+    }
+
     public void render(SpriteBatch batch) {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();

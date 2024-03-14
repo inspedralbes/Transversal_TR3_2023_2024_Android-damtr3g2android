@@ -112,17 +112,16 @@ public class GameScreen implements Screen {
 
         if (Gdx.input.isKeyPressed(Input.Keys.W) && !isJumping) {
             isJumping = true;
-            knightJump.update(delta);
+            knightJump.resetAnimation();
         }
         if (isJumping) {
-            knightJump.update(delta);
+            knightJump.updateSalto(delta);
             if (knightJump.isAnimationFinished()) {
                 isJumping = false;
             }
         } else {
             knightWalk.update(delta);
         }
-
 
         // Update crouch animation if crouched
         if (isCrouched) {
