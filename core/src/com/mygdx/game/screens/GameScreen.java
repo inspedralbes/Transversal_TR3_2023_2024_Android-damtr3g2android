@@ -15,8 +15,8 @@ public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private Background background;
     private Witch witch;
-    private Knight knightWalk, knightAttack;
-    private boolean isAttacking = false;
+    private Knight knightWalk, knightAttack, knightCrouch, knightJump;
+    private boolean isAttacking = false, isCrouched = false, isJumping = false;
 
     private DemonFly demonFly;
 
@@ -32,6 +32,8 @@ public class GameScreen implements Screen {
 
         knightWalk = new Knight(new Vector2(800, 100), 2, 8); // Por ejemplo, posición (100, 100)
         knightAttack = new Knight(new Vector2(800, 100), 9, 5); // Por ejemplo, posición (100, 100)
+        knightCrouch = new Knight(new Vector2(800, 100), 15, 3); // Por ejemplo, posición (100, 100)
+        knightJump = new Knight(new Vector2(800, 200), 22, 5); // Por ejemplo, posición (100, 100)
 
         rana = new Rana(new Vector2(500, 100)); // Por ejemplo, posición (100, 100)
     }
@@ -59,7 +61,14 @@ public class GameScreen implements Screen {
         demonFly.render(batch);
         if (isAttacking) {
             knightAttack.render(batch);
-        } else {
+        }
+        else if (isCrouched) {
+            knightCrouch.render(batch);
+        }
+        else if(isJumping) {
+            knightJump.render(batch);
+        }
+        else {
             knightWalk.render(batch);
         }
         rana.render(batch);
@@ -72,11 +81,21 @@ public class GameScreen implements Screen {
         // Actualiza la lógica de la bruja del juego
         witch.update(delta);
         demonFly.update(delta);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.A) && !isAttacking) {
+
+        // Check if the S key is pressed
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            isCrouched = true;
+        } else {
+            isCrouched = false;
+        }
+
+        // Check for other key events and handle them
+        if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
             isAttacking = true;
             // Reinicia la animación de ataque
             knightAttack.resetAnimation();
         }
+
         if (isAttacking) {
             knightAttack.update(delta);
             if (knightAttack.isAnimationFinished()) {
@@ -85,6 +104,26 @@ public class GameScreen implements Screen {
         } else {
             knightWalk.update(delta);
         }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && !isJumping) {
+            isJumping = true;
+            knightJump.update(delta);
+        }
+        if (isJumping) {
+            knightJump.update(delta);
+            if (knightJump.isAnimationFinished()) {
+                isJumping = false;
+            }
+        } else {
+            knightWalk.update(delta);
+        }
+
+
+        // Update crouch animation if crouched
+        if (isCrouched) {
+            knightCrouch.update(delta);
+        }
+
         rana.update(delta);
     }
 
@@ -118,6 +157,8 @@ public class GameScreen implements Screen {
         demonFly.dispose();
         knightWalk.dispose();
         knightAttack.dispose();
+        knightCrouch.dispose();
+        knightJump.dispose();
         rana.dispose();
     }
 }
