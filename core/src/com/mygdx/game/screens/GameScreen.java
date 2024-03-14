@@ -33,7 +33,7 @@ public class GameScreen implements Screen {
         knightWalk = new Knight(new Vector2(300, 100), 2, 8); // Por ejemplo, posición (100, 100)
         knightAttack = new Knight(new Vector2(300, 100), 9, 5); // Por ejemplo, posición (100, 100)
 
-        rana = new Rana(new Vector2(500, 100)); // Por ejemplo, posición (100, 100)
+        rana = new Rana(new Vector2(500, 100),100); // Por ejemplo, posición (100, 100)
     }
 
     @Override
