@@ -40,7 +40,7 @@ public class GameScreen implements Screen {
 
         rana = new Rana(new Vector2(500, 100),100);
         tempanodehielo = new TempanoHielo(new Vector2(500, 50));
-        cacodaemon = new Cacodaemon(new Vector2(800, 50), 0, 6);
+        cacodaemon = new Cacodaemon(new Vector2(100, 900));
     }
 
     @Override

@@ -17,7 +17,7 @@ public class TempanoHielo {
     private static final int FRAME_WIDTH = 48;
     private static final int FRAME_HEIGHT = 32;
     private static final int FRAMES_IN_ROW_WALK = 10;
-    private static final float FRAME_DURATION = 0.3f;
+    private static final float FRAME_DURATION = 0.1f;
     private static final float SPEED = 8000f;
 
     private float stateTime;
