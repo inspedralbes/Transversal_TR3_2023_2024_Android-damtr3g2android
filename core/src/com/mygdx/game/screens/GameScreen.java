@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.objects.Cacodaemon;
 import com.mygdx.game.objects.DemonFly;
 import com.mygdx.game.objects.Knight;
 import com.mygdx.game.objects.Rana;
@@ -24,6 +25,7 @@ public class GameScreen implements Screen {
     private DemonFly demonFly;
     private Rana rana;
     private TempanoHielo tempanodehielo;
+    private Cacodaemon cacodaemon;
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
@@ -38,6 +40,7 @@ public class GameScreen implements Screen {
 
         rana = new Rana(new Vector2(500, 100),100);
         tempanodehielo = new TempanoHielo(new Vector2(500, 50));
+        cacodaemon = new Cacodaemon(new Vector2(800, 50), 0, 6);
     }
 
     @Override
@@ -68,6 +71,7 @@ public class GameScreen implements Screen {
         }
         rana.render(batch);
         tempanodehielo.render(batch);
+        cacodaemon.render(batch);
         batch.end();
     }
 
@@ -91,6 +95,7 @@ public class GameScreen implements Screen {
             knightWalk.update(delta);
         }
         rana.update(delta);
+        cacodaemon.update(delta);
         tempanodehielo.update(delta);
     }
 
@@ -125,6 +130,7 @@ public class GameScreen implements Screen {
         knightWalk.dispose();
         knightAttack.dispose();
         rana.dispose();
+        cacodaemon.dispose();
         tempanodehielo.dispose();
     }
 }
