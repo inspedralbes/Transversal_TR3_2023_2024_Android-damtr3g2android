@@ -9,31 +9,35 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.objects.DemonFly;
 import com.mygdx.game.objects.Knight;
 import com.mygdx.game.objects.Rana;
+import com.mygdx.game.objects.TempanoHielo;
 import com.mygdx.game.objects.Witch;
 
 public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private Background background;
+    //
     private Witch witch;
     private Knight knightWalk, knightAttack;
     private boolean isAttacking = false;
 
+    //Boses
     private DemonFly demonFly;
-
     private Rana rana;
+    private TempanoHielo tempanodehielo;
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
         // Crea el fondo del juego
         background = new Background();
         // Crea la bruja del juego en la posición inicial
-        witch = new Witch(new Vector2(100, 100)); // Por ejemplo, posición (100, 100)
-        demonFly = new DemonFly(new Vector2(300, 100)); // Por ejemplo, posición (100, 100)
+        witch = new Witch(new Vector2(100, 100));
+        demonFly = new DemonFly(new Vector2(300, 100));
 
-        knightWalk = new Knight(new Vector2(300, 100), 2, 8); // Por ejemplo, posición (100, 100)
-        knightAttack = new Knight(new Vector2(300, 100), 9, 5); // Por ejemplo, posición (100, 100)
+        knightWalk = new Knight(new Vector2(300, 100), 2, 8);
+        knightAttack = new Knight(new Vector2(300, 100), 9, 5);
 
-        rana = new Rana(new Vector2(500, 100),100); // Por ejemplo, posición (100, 100)
+        rana = new Rana(new Vector2(500, 100),100);
+        tempanodehielo = new TempanoHielo(new Vector2(500, 50));
     }
 
     @Override
@@ -63,6 +67,7 @@ public class GameScreen implements Screen {
             knightWalk.render(batch);
         }
         rana.render(batch);
+        tempanodehielo.render(batch);
         batch.end();
     }
 
@@ -86,6 +91,7 @@ public class GameScreen implements Screen {
             knightWalk.update(delta);
         }
         rana.update(delta);
+        tempanodehielo.update(delta);
     }
 
     @Override
@@ -119,5 +125,6 @@ public class GameScreen implements Screen {
         knightWalk.dispose();
         knightAttack.dispose();
         rana.dispose();
+        tempanodehielo.dispose();
     }
 }
