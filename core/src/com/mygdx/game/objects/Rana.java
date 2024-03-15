@@ -23,6 +23,8 @@ public class Rana {
     private static final int FRAMES_IN_ROW_ATTACK = 5;
     private static final int FRAMES_IN_ROW_DEATH = 5;
     private static final float FRAME_DURATION = 0.3f;
+    private static final float DESAPARECER_IZQUIERDA = 200f; // Ajustar la cantidad de píxeles antes de desaparecer
+
     private static final float SPEED = 2000f; // Aumentar la velocidad de movimiento en píxeles por segundo
 
     private float stateTime;
@@ -97,7 +99,7 @@ public class Rana {
             }
 
             // Comprobar si la rana ha salido completamente de la pantalla
-            if (position.x + FRAME_WIDTH < 0) {
+            if (position.x + FRAME_WIDTH < -60) {
                 // Reiniciar la posición de la rana a la derecha de la pantalla
                 position.x = Gdx.graphics.getWidth();
             }
@@ -113,7 +115,7 @@ public class Rana {
 
     public void render(SpriteBatch batch) {
         float screenWidth = Gdx.graphics.getWidth();
-        float scale = screenWidth / 800f; // Suponiendo que el tamaño base de la bruja sea para una pantalla de ancho 800
+        float scale = screenWidth / 1080f; // Suponiendo que el tamaño base de la bruja sea para una pantalla de ancho 800
         scale *= 2.7f; // Aumentar la escala en un 50%
 
         // Dibujar el fotograma actual con la escala calculada
