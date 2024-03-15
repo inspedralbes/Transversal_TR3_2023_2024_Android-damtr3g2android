@@ -27,6 +27,10 @@ public class GameScreen implements Screen {
     private TempanoHielo tempanodehielo;
     private Cacodaemon cacodaemon;
 
+    private boolean jumpCooldownActive = false;
+    private float jumpCooldownTimer = 0f;
+    private static final float JUMP_COOLDOWN_DURATION = 1f;
+
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
         // Crea el fondo del juego
@@ -66,22 +70,16 @@ public class GameScreen implements Screen {
         // Dibuja la bruja del juego
         witch.render(batch);
 
+        // Dibuja la animación correspondiente según el estado
         if (isAttacking) {
             knightAttack.render(batch);
-        }
-        else if (isCrouched) {
+        } else if (isCrouched) {
             knightCrouch.render(batch);
-        }
-        else if(isJumping) {
+        } else if (isJumping) {
             knightJump.render(batch);
-        }
-        else {
+        } else {
             knightWalk.render(batch);
         }
-        //demonFly.render(batch);
-        //rana.render(batch);
-        //tempanodehielo.render(batch);
-        //cacodaemon.render(batch);
         batch.end();
     }
 
@@ -91,32 +89,20 @@ public class GameScreen implements Screen {
         // Actualiza la lógica de la bruja del juego
         witch.update(delta);
 
-        // Check if the S key is pressed
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            isCrouched = true;
-        } else {
-            isCrouched = false;
-        }
-
-        // Check for other key events and handle them
-        if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
-            isAttacking = true;
-            // Reinicia la animación de ataque
-            knightAttack.resetAnimation();
-        }
-
-        if (isAttacking) {
-            knightAttack.update(delta);
-            if (knightAttack.isAnimationFinished()) {
-                isAttacking = false;
+        // Actualiza el tiempo de cooldown de salto si está activo
+        if (jumpCooldownActive) {
+            jumpCooldownTimer -= delta;
+            if (jumpCooldownTimer <= 0) {
+                jumpCooldownActive = false;
             }
-        } else {
-            knightWalk.update(delta);
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.W) && !isJumping) {
+        // Verifica si se presiona la tecla de salto y si no está en cooldown
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && !isJumping && !jumpCooldownActive) {
             isJumping = true;
             knightJump.resetAnimation();
+            jumpCooldownActive = true;
+            jumpCooldownTimer = JUMP_COOLDOWN_DURATION;
         }
         if (isJumping) {
             knightJump.updateSalto(delta);
