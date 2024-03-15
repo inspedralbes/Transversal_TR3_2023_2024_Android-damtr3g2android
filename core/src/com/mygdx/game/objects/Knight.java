@@ -59,6 +59,15 @@ public class Knight {
         }
     }
 
+    public void updateAgachar(float delta) {
+        stateTime += delta;
+
+        if (stateTime >= 0.40f) {
+            currentFrameIndex = (currentFrameIndex + 1) % totalFrames;
+            stateTime = 0;
+        }
+    }
+
     public void render(SpriteBatch batch) {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();

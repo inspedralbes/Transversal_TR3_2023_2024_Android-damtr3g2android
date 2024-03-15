@@ -39,7 +39,7 @@ public class GameScreen implements Screen {
 
         knightWalk = new Knight(new Vector2(-150, 0), 2, 8); // Por ejemplo, posición (100, 100)
         knightAttack = new Knight(new Vector2(0, 0), 9, 5); // Por ejemplo, posición (100, 100)
-        knightCrouch = new Knight(new Vector2(-150, 0), 15, 3); // Por ejemplo, posición (100, 100)
+        knightCrouch = new Knight(new Vector2(-150, 0), 15, 5); // Por ejemplo, posición (100, 100)
         knightJump = new Knight(new Vector2(-150, 200), 22, 5); // Por ejemplo, posición (100, 100)
 
         //rana = new Rana(new Vector2(500, 100),100);
@@ -141,7 +141,7 @@ public class GameScreen implements Screen {
 
         // Update crouch animation if crouched
         if (isCrouched) {
-            knightCrouch.update(delta);
+            knightCrouch.updateAgachar(delta);
         }
         //demonFly.update(delta);
         //rana.update(delta);
