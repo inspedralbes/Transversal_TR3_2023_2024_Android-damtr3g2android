@@ -39,7 +39,7 @@ public class GameScreen implements Screen {
         knightCrouch = new Knight(new Vector2(-150, 0), 15, 4,true);
         knightJump = new Knight(new Vector2(-150, 200), 22, 5,false);
         knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false);
-        waterball = new WaterBall(new Vector2(0, 700));
+        waterball = new WaterBall(new Vector2(500, 700));
         listaRanas = new ArrayList<>();
     }
 
