@@ -26,11 +26,9 @@ public class GameScreen implements Screen {
     private Rana rana;
     private TempanoHielo tempanodehielo;
     private Cacodaemon cacodaemon;
-
     private boolean jumpCooldownActive = false;
     private float jumpCooldownTimer = 0f;
     private static final float JUMP_COOLDOWN_DURATION = 1f;
-
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
         // Crea el fondo del juego
@@ -80,6 +78,11 @@ public class GameScreen implements Screen {
         } else {
             knightWalk.render(batch);
         }
+
+        //demonFly.render(batch);
+        //rana.render(batch);
+        //tempanodehielo.render(batch);
+        //cacodaemon.render(batch);
         batch.end();
     }
 
@@ -95,6 +98,29 @@ public class GameScreen implements Screen {
             if (jumpCooldownTimer <= 0) {
                 jumpCooldownActive = false;
             }
+        }
+
+        // Check if the S key is pressed
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            isCrouched = true;
+        } else {
+            isCrouched = false;
+        }
+
+        // Check for other key events and handle them
+        if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
+            isAttacking = true;
+            // Reinicia la animación de ataque
+            knightAttack.resetAnimation();
+        }
+
+        if (isAttacking) {
+            knightAttack.update(delta);
+            if (knightAttack.isAnimationFinished()) {
+                isAttacking = false;
+            }
+        } else {
+            knightWalk.update(delta);
         }
 
         // Verifica si se presiona la tecla de salto y si no está en cooldown
