@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.objects.Cacodaemon;
 import com.mygdx.game.objects.DemonFly;
 import com.mygdx.game.objects.Knight;
@@ -21,11 +22,20 @@ public class GameScreen implements Screen {
     private Knight knightWalk, knightAttack;
     private boolean isAttacking = false;
 
+    private float elapsedTime = 0;
+    private static final float TIENDA_INTERVAL = 30;
+
     //Boses
     private DemonFly demonFly;
     private Rana rana;
     private TempanoHielo tempanodehielo;
     private Cacodaemon cacodaemon;
+<<<<<<< Updated upstream
+=======
+    private boolean jumpCooldownActive = false;
+    private float jumpCooldownTimer = 0f;
+    private static final float JUMP_COOLDOWN_DURATION = 1f;
+>>>>>>> Stashed changes
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
@@ -50,6 +60,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        elapsedTime += delta; // Incrementa el tiempo transcurrido
         // Actualiza la lógica del juego
         update(delta);
 
@@ -73,6 +84,14 @@ public class GameScreen implements Screen {
         tempanodehielo.render(batch);
         cacodaemon.render(batch);
         batch.end();
+
+        // Verifica si ha pasado el tiempo para mostrar la tienda
+        if (elapsedTime >= TIENDA_INTERVAL) {
+            // Cambia a la pantalla de la tienda
+            ((MyGdxGame) Gdx.app.getApplicationListener()).changeScreen(MyGdxGame.TIENDA_SCREEN);
+            // Reinicia el temporizador
+            elapsedTime = 0;
+        }
     }
 
     private void update(float delta) {
