@@ -73,7 +73,11 @@ public class GameScreen implements Screen {
         // Dibuja la animación correspondiente según el estado
         if (isCrouched && isAttacking) {
             knightCrouchAttack.render(batch);
-        } else if (isAttacking) {
+            if (knightCrouchAttack.getBounds().overlaps(rana.getBounds())) {
+                rana.setVida(0);
+            }
+        }
+        else if (isAttacking) {
             knightAttack.render(batch);
             // Verificar colisión con la rana
 
@@ -100,6 +104,8 @@ public class GameScreen implements Screen {
         background.update(delta);
         // Actualiza la lógica de la bruja del juego
         witch.update(delta);
+
+        knightWalk.update(delta);
 
         // Actualiza el tiempo de cooldown de salto si está activo
         if (jumpCooldownActive) {
