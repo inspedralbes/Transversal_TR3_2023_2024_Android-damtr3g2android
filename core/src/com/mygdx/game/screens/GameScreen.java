@@ -42,7 +42,7 @@ public class GameScreen implements Screen {
         knightCrouch = new Knight(new Vector2(-150, 0), 15, 4,true); // Por ejemplo, posición (100, 100)
         knightJump = new Knight(new Vector2(-150, 200), 22, 5,false); // Por ejemplo, posición (100, 100)
 
-        //rana = new Rana(new Vector2(500, 100),100);
+        rana = new Rana(new Vector2(0, -20),100);
         //tempanodehielo = new TempanoHielo(new Vector2(500, 50));
         //demonFly = new DemonFly(new Vector2(300, 100));
         //cacodaemon = new Cacodaemon(new Vector2(100, 900));
@@ -80,7 +80,7 @@ public class GameScreen implements Screen {
         }
 
         //demonFly.render(batch);
-        //rana.render(batch);
+        rana.render(batch);
         //tempanodehielo.render(batch);
         //cacodaemon.render(batch);
         batch.end();
@@ -144,7 +144,7 @@ public class GameScreen implements Screen {
             knightCrouch.updateAgachar(delta);
         }
         //demonFly.update(delta);
-        //rana.update(delta);
+        rana.update(delta);
         //cacodaemon.update(delta);
         //tempanodehielo.update(delta);
     }
@@ -181,7 +181,7 @@ public class GameScreen implements Screen {
         knightCrouch.dispose();
         knightJump.dispose();
         //demonFly.dispose();
-        //rana.dispose();
+        rana.dispose();
         //cacodaemon.dispose();
         //tempanodehielo.dispose();
     }
