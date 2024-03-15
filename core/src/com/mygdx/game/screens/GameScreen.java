@@ -53,7 +53,9 @@ public class GameScreen implements Screen {
         witch.render(batch);
         if (isCrouched && isAttacking) {
             knightCrouchAttack.render(batch);
-        } else if (isAttacking) {
+
+        }
+        else if (isAttacking) {
             knightAttack.render(batch);
         } else if (isCrouched) {
             knightCrouch.render(batch);
@@ -71,6 +73,12 @@ public class GameScreen implements Screen {
     private void update(float delta) {
         background.update(delta);
         witch.update(delta);
+
+
+        knightWalk.update(delta);
+
+        // Actualiza el tiempo de cooldown de salto si está activo
+
         if (jumpCooldownActive) {
             jumpCooldownTimer -= delta;
             if (jumpCooldownTimer <= 0) {
