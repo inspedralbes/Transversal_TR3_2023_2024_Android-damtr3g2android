@@ -34,7 +34,7 @@ public class GameScreen implements Screen {
         // Crea el fondo del juego
         background = new Background();
         // Crea la bruja del juego en la posición inicial
-        witch = new Witch(new Vector2(0, 800));
+        witch = new Witch(new Vector2(0, 700));
 
 
         knightWalk = new Knight(new Vector2(-150, 0), 2, 8); // Por ejemplo, posición (100, 100)
