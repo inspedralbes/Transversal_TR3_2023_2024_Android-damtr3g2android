@@ -111,7 +111,16 @@ public class Rana {
                 dispose();
             }
         }
+
+        // Verificar si la vida es 0 y marcar la rana como muerta
+        if (vida <= 0 && !isDead) {
+            vida = 0; // Asegurarse de que la vida sea 0
+            isDead = true;
+            stateTime = 0; // Reiniciar el tiempo para la animación de muerte
+            currentFrameIndex = 0; // Reiniciar el índice del fotograma para la animación de muerte
+        }
     }
+
 
     public void render(SpriteBatch batch) {
         float screenWidth = Gdx.graphics.getWidth();

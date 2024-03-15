@@ -78,7 +78,7 @@ public class GameScreen implements Screen {
             // Verificar colisión con la rana
 
             if (knightAttack.getBounds().overlaps(rana.getBounds())) {
-                rana.dispose();
+                rana.setVida(0);
             }
         } else if (isCrouched) {
             knightCrouch.render(batch);
