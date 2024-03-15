@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.objects.WaterBall;
 import com.mygdx.game.screens.Background;
 import com.mygdx.game.objects.Knight;
 import com.mygdx.game.objects.Rana;
@@ -18,6 +19,7 @@ import java.util.List;
 public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private Background background;
+    private WaterBall waterball;
     private Witch witch;
     private Knight knightWalk, knightAttack, knightCrouch, knightJump, knightCrouchAttack;
     private boolean isAttacking = false, isCrouched = false, isJumping = false;
@@ -37,6 +39,7 @@ public class GameScreen implements Screen {
         knightCrouch = new Knight(new Vector2(-150, 0), 15, 4,true);
         knightJump = new Knight(new Vector2(-150, 200), 22, 5,false);
         knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false);
+        waterball = new WaterBall(new Vector2(0, 700));
         listaRanas = new ArrayList<>();
     }
 
@@ -51,6 +54,7 @@ public class GameScreen implements Screen {
         batch.begin();
         background.draw(batch);
         witch.render(batch);
+        waterball.render(batch);
         if (isCrouched && isAttacking) {
             knightCrouchAttack.render(batch);
 
@@ -76,7 +80,7 @@ public class GameScreen implements Screen {
 
 
         knightWalk.update(delta);
-
+        waterball.update(delta);
         // Actualiza el tiempo de cooldown de salto si está activo
 
         if (jumpCooldownActive) {
