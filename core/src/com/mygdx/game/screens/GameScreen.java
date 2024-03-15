@@ -89,6 +89,12 @@ public class GameScreen implements Screen {
             isCrouched = true;
             if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
                 isAttacking = true;
+                for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext();) {
+                    Rana rana = iterator.next();
+                    if (knightCrouchAttack.getBounds().overlaps(rana.getBounds())) {
+                        rana.setVida(0);
+                    }
+                }
             }
         } else {
             isCrouched = false;
