@@ -37,10 +37,10 @@ public class GameScreen implements Screen {
         witch = new Witch(new Vector2(0, 700));
 
 
-        knightWalk = new Knight(new Vector2(-150, 0), 2, 8); // Por ejemplo, posición (100, 100)
-        knightAttack = new Knight(new Vector2(0, 0), 9, 5); // Por ejemplo, posición (100, 100)
-        knightCrouch = new Knight(new Vector2(-150, 0), 15, 5); // Por ejemplo, posición (100, 100)
-        knightJump = new Knight(new Vector2(-150, 200), 22, 5); // Por ejemplo, posición (100, 100)
+        knightWalk = new Knight(new Vector2(-150, 0), 2, 8,false); // Por ejemplo, posición (100, 100)
+        knightAttack = new Knight(new Vector2(0, 0), 9, 5,false); // Por ejemplo, posición (100, 100)
+        knightCrouch = new Knight(new Vector2(-150, 0), 15, 4,true); // Por ejemplo, posición (100, 100)
+        knightJump = new Knight(new Vector2(-150, 200), 22, 5,false); // Por ejemplo, posición (100, 100)
 
         //rana = new Rana(new Vector2(500, 100),100);
         //tempanodehielo = new TempanoHielo(new Vector2(500, 50));

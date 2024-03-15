@@ -23,23 +23,28 @@ public class Knight {
 
     private float stateTime;
 
-    public Knight(Vector2 position, int fila, int columna) {
+    public Knight(Vector2 position, int fila, int columna, boolean agachar) {
         Texture spriteSheet = new Texture(Gdx.files.internal("Fire_Warrior-Sheet.png"));
 
-        frames = new TextureRegion[columna];
+        int initialFrame = agachar ? 1 : 0; // Si agachar es true, omitir la primera posición
+
+        frames = new TextureRegion[columna - initialFrame]; // Ajustar la longitud del arreglo de frames
+
         int frameWidth = spriteSheet.getWidth() / SPRITESHEET_COLS;
         int frameHeight = spriteSheet.getHeight() / SPRITESHEET_ROWS;
 
         int rowIndex = fila; // Índice de la tercera fila (empezando desde 0)
 
-        for (int j = 0; j < columna; j++) {
-            frames[j] = new TextureRegion(spriteSheet, j * frameWidth, rowIndex * frameHeight, frameWidth, frameHeight);
+        for (int j = initialFrame; j < columna; j++) {
+            frames[j - initialFrame] = new TextureRegion(spriteSheet, j * frameWidth, rowIndex * frameHeight, frameWidth, frameHeight);
         }
 
         this.position = position;
         this.bounds = new Rectangle(position.x, position.y, frameWidth, frameHeight);
-        this.totalFrames = columna;
+        this.totalFrames = columna - initialFrame; // Ajustar el número total de frames
     }
+
+
 
     public void update(float delta) {
         stateTime += delta;
