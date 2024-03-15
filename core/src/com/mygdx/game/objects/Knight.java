@@ -106,4 +106,5 @@ public class Knight {
     public void dispose() {
         frames[0].getTexture().dispose();
     }
+
 }
