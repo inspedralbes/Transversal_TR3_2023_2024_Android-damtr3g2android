@@ -32,17 +32,18 @@ public class GameScreen implements Screen {
         // Crea el fondo del juego
         background = new Background();
         // Crea la bruja del juego en la posición inicial
-        witch = new Witch(new Vector2(100, 100));
-        demonFly = new DemonFly(new Vector2(300, 100));
+        witch = new Witch(new Vector2(0, 800));
 
-        knightWalk = new Knight(new Vector2(800, 100), 2, 8); // Por ejemplo, posición (100, 100)
-        knightAttack = new Knight(new Vector2(800, 100), 9, 5); // Por ejemplo, posición (100, 100)
-        knightCrouch = new Knight(new Vector2(800, 100), 15, 3); // Por ejemplo, posición (100, 100)
-        knightJump = new Knight(new Vector2(800, 200), 22, 5); // Por ejemplo, posición (100, 100)
 
-        rana = new Rana(new Vector2(500, 100),100);
-        tempanodehielo = new TempanoHielo(new Vector2(500, 50));
-        cacodaemon = new Cacodaemon(new Vector2(100, 900));
+        knightWalk = new Knight(new Vector2(-150, 0), 2, 8); // Por ejemplo, posición (100, 100)
+        knightAttack = new Knight(new Vector2(0, 0), 9, 5); // Por ejemplo, posición (100, 100)
+        knightCrouch = new Knight(new Vector2(-150, 0), 15, 3); // Por ejemplo, posición (100, 100)
+        knightJump = new Knight(new Vector2(-150, 200), 22, 5); // Por ejemplo, posición (100, 100)
+
+        //rana = new Rana(new Vector2(500, 100),100);
+        //tempanodehielo = new TempanoHielo(new Vector2(500, 50));
+        //demonFly = new DemonFly(new Vector2(300, 100));
+        //cacodaemon = new Cacodaemon(new Vector2(100, 900));
     }
 
     @Override
@@ -65,7 +66,6 @@ public class GameScreen implements Screen {
         // Dibuja la bruja del juego
         witch.render(batch);
 
-        demonFly.render(batch);
         if (isAttacking) {
             knightAttack.render(batch);
         }
@@ -78,9 +78,10 @@ public class GameScreen implements Screen {
         else {
             knightWalk.render(batch);
         }
-        rana.render(batch);
-        tempanodehielo.render(batch);
-        cacodaemon.render(batch);
+        //demonFly.render(batch);
+        //rana.render(batch);
+        //tempanodehielo.render(batch);
+        //cacodaemon.render(batch);
         batch.end();
     }
 
@@ -89,7 +90,6 @@ public class GameScreen implements Screen {
         background.update(delta);
         // Actualiza la lógica de la bruja del juego
         witch.update(delta);
-        demonFly.update(delta);
 
         // Check if the S key is pressed
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
@@ -131,10 +131,10 @@ public class GameScreen implements Screen {
         if (isCrouched) {
             knightCrouch.update(delta);
         }
-
-        rana.update(delta);
-        cacodaemon.update(delta);
-        tempanodehielo.update(delta);
+        //demonFly.update(delta);
+        //rana.update(delta);
+        //cacodaemon.update(delta);
+        //tempanodehielo.update(delta);
     }
 
     @Override
@@ -164,13 +164,13 @@ public class GameScreen implements Screen {
         background.dispose();
         // Libera los recursos de la bruja del juego
         witch.dispose();
-        demonFly.dispose();
         knightWalk.dispose();
         knightAttack.dispose();
         knightCrouch.dispose();
         knightJump.dispose();
-        rana.dispose();
-        cacodaemon.dispose();
-        tempanodehielo.dispose();
+        //demonFly.dispose();
+        //rana.dispose();
+        //cacodaemon.dispose();
+        //tempanodehielo.dispose();
     }
 }

@@ -64,8 +64,8 @@ public class Knight {
         float screenHeight = Gdx.graphics.getHeight();
 
         // Calcular la escala en función del ancho de la pantalla
-        float scale = screenWidth / 800f; // Suponiendo que el tamaño base de la bruja sea para una pantalla de ancho 800
-        scale *= 5f; // Aumentar la escala en un 50%
+        float scale = screenWidth / 1080f; // Suponiendo que el tamaño base de la bruja sea para una pantalla de ancho 800
+        scale *= 7f; // Aumentar la escala en un 50%
 
         // Dibujar el fotograma actual con la escala calculada
         batch.draw(frames[currentFrameIndex], position.x, position.y, FRAME_WIDTH * scale, FRAME_HEIGHT * scale);
