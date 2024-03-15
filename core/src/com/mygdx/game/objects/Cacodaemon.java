@@ -7,25 +7,25 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class TempanoHielo {
+public class Cacodaemon {
     private TextureRegion[] walkFrames;
 
     private int currentFrameIndex;
     private Vector2 position;
     private Rectangle bounds;
 
-    private static final int FRAME_WIDTH = 48;
-    private static final int FRAME_HEIGHT = 32;
-    private static final int FRAMES_IN_ROW_WALK = 10;
+    private static final int FRAME_WIDTH = 64;
+    private static final int FRAME_HEIGHT = 64;
+    private static final int FRAMES_IN_ROW_WALK = 6;
     private static final float FRAME_DURATION = 0.1f;
-    private static final float SPEED = 8000f;
+    private static final float SPEED = 1000f;
 
     private float stateTime;
     private boolean isAttacking;
     private float attackTimer;
 
-    public TempanoHielo(Vector2 position) {
-        Texture WalkSpriteSheet = new Texture(Gdx.files.internal("Tempano_Hielo/ICE_Repeatable.png"));
+    public Cacodaemon(Vector2 position) {
+        Texture WalkSpriteSheet = new Texture(Gdx.files.internal("Cacodaemon/Cacodaemon.png"));
 
         walkFrames = new TextureRegion[FRAMES_IN_ROW_WALK];
 
@@ -43,37 +43,37 @@ public class TempanoHielo {
     public void update(float delta) {
         stateTime += delta;
 
-            if (attackTimer >= 5f) {
-                startAttack();
-                attackTimer = 0f;
-            }
+        if (attackTimer >= 5f) {
+            startAttack();
+            attackTimer = 0f;
+        }
 
-            if (isAttacking) {
-                currentFrameIndex = (int) (stateTime / FRAME_DURATION) % walkFrames.length;
-                if (stateTime >= FRAME_DURATION * walkFrames.length) {
-                    stateTime = 0;
-                    isAttacking = false;
-                    position.x -= SPEED * delta;
-                }
-            } else if (stateTime >= FRAME_DURATION) {
-                currentFrameIndex = (currentFrameIndex + 1) % walkFrames.length;
+        if (isAttacking) {
+            currentFrameIndex = (int) (stateTime / FRAME_DURATION) % walkFrames.length;
+            if (stateTime >= FRAME_DURATION * walkFrames.length) {
                 stateTime = 0;
+                isAttacking = false;
                 position.x -= SPEED * delta;
             }
-
-            if (position.x + FRAME_WIDTH < 0) {
-                position.x = Gdx.graphics.getWidth();
-            }
+        } else if (stateTime >= FRAME_DURATION) {
+            currentFrameIndex = (currentFrameIndex + 1) % walkFrames.length;
+            stateTime = 0;
+            position.x -= SPEED * delta;
         }
+
+        if (position.x + FRAME_WIDTH < 0) {
+            position.x = Gdx.graphics.getWidth();
+        }
+    }
 
 
     public void render(SpriteBatch batch) {
         float screenWidth = Gdx.graphics.getWidth();
-        float scale = screenWidth / 800f;
+        float scale = screenWidth / 2000f;
         scale *= 2.7f;
 
-            batch.draw(walkFrames[currentFrameIndex], position.x, position.y, FRAME_WIDTH * scale, FRAME_HEIGHT * scale);
-        }
+        batch.draw(walkFrames[currentFrameIndex], position.x, position.y, FRAME_WIDTH * scale, FRAME_HEIGHT * scale);
+    }
 
     public void startAttack() {
         isAttacking = true;
