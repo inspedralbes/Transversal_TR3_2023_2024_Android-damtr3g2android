@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.objects.Cacodaemon;
 import com.mygdx.game.objects.DemonFly;
@@ -71,6 +72,12 @@ public class GameScreen implements Screen {
         // Dibuja la animación correspondiente según el estado
         if (isAttacking) {
             knightAttack.render(batch);
+            // Verificar colisión con la rana
+            Rectangle knightAttackBounds = knightAttack.getBounds();
+            Rectangle ranaBounds = rana.getBounds();
+            if (knightAttackBounds.overlaps(ranaBounds)) {
+                rana.dispose();
+            }
         } else if (isCrouched) {
             knightCrouch.render(batch);
         } else if (isJumping) {

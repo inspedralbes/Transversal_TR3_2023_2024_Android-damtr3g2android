@@ -146,9 +146,6 @@ public class Rana {
         }
     }
 
-    public Rectangle getBounds() {
-        return bounds;
-    }
 
     public void setPosition(Vector2 position) {
         this.position = position;
@@ -174,5 +171,8 @@ public class Rana {
 
     public void setVida(int vida) {
         this.vida = vida;
+    }
+    public Rectangle getBounds() {
+        return new Rectangle(position.x, position.y, FRAME_WIDTH, FRAME_WIDTH);
     }
 }
