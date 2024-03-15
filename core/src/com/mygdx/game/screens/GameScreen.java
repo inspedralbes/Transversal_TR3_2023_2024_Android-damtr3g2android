@@ -19,7 +19,7 @@ public class GameScreen implements Screen {
     private Background background;
     //
     private Witch witch;
-    private Knight knightWalk, knightAttack, knightCrouch, knightJump;
+    private Knight knightWalk, knightAttack, knightCrouch, knightJump, knightCrouchAttack;
     private boolean isAttacking = false, isCrouched = false, isJumping = false;
 
     //Boses
@@ -42,6 +42,7 @@ public class GameScreen implements Screen {
         knightAttack = new Knight(new Vector2(0, 0), 9, 5,false); // Por ejemplo, posición (100, 100)
         knightCrouch = new Knight(new Vector2(-150, 0), 15, 4,true); // Por ejemplo, posición (100, 100)
         knightJump = new Knight(new Vector2(-150, 200), 22, 5,false); // Por ejemplo, posición (100, 100)
+        knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false); // Por ejemplo, posición (100, 100)
 
         rana = new Rana(new Vector2(0, -20),100);
         //tempanodehielo = new TempanoHielo(new Vector2(500, 50));
@@ -70,7 +71,9 @@ public class GameScreen implements Screen {
         witch.render(batch);
 
         // Dibuja la animación correspondiente según el estado
-        if (isAttacking) {
+        if (isCrouched && isAttacking) {
+            knightCrouchAttack.render(batch);
+        } else if (isAttacking) {
             knightAttack.render(batch);
             // Verificar colisión con la rana
             Rectangle knightAttackBounds = knightAttack.getBounds();
@@ -110,6 +113,9 @@ public class GameScreen implements Screen {
         // Check if the S key is pressed
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             isCrouched = true;
+            if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
+                isAttacking = true;
+            }
         } else {
             isCrouched = false;
         }
@@ -126,8 +132,6 @@ public class GameScreen implements Screen {
             if (knightAttack.isAnimationFinished()) {
                 isAttacking = false;
             }
-        } else {
-            knightWalk.update(delta);
         }
 
         // Verifica si se presiona la tecla de salto y si no está en cooldown
@@ -137,18 +141,19 @@ public class GameScreen implements Screen {
             jumpCooldownActive = true;
             jumpCooldownTimer = JUMP_COOLDOWN_DURATION;
         }
+
         if (isJumping) {
             knightJump.updateSalto(delta);
             if (knightJump.isAnimationFinished()) {
                 isJumping = false;
             }
-        } else {
-            knightWalk.update(delta);
         }
 
         // Update crouch animation if crouched
-        if (isCrouched) {
-            knightCrouch.updateAgachar(delta);
+        if (isCrouched && isAttacking) {
+            knightCrouchAttack.update(delta);
+        } else if (isCrouched) {
+            knightCrouch.update(delta);
         }
         //demonFly.update(delta);
         rana.update(delta);
