@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.objects.Cacodaemon;
 import com.mygdx.game.objects.WaterBall;
 import com.mygdx.game.screens.Background;
 import com.mygdx.game.objects.Knight;
@@ -20,6 +21,8 @@ public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private Background background;
     private WaterBall waterball;
+
+    private Cacodaemon cacodaemon;
     private Witch witch;
     private Knight knightWalk, knightAttack, knightCrouch, knightJump, knightCrouchAttack;
     private boolean isAttacking = false, isCrouched = false, isJumping = false;
@@ -34,11 +37,13 @@ public class GameScreen implements Screen {
         this.batch = batch;
         background = new Background();
         witch = new Witch(new Vector2(0, 700));
+        cacodaemon = new Cacodaemon(new Vector2(300, 700));
         knightWalk = new Knight(new Vector2(-150, 0), 2, 8,false);
         knightAttack = new Knight(new Vector2(0, 0), 9, 5,false);
         knightCrouch = new Knight(new Vector2(-150, 0), 15, 4,true);
         knightJump = new Knight(new Vector2(-150, 200), 22, 5,false);
         knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false);
+
         waterball = new WaterBall(new Vector2(500, 700));
         listaRanas = new ArrayList<>();
     }
@@ -55,6 +60,7 @@ public class GameScreen implements Screen {
         background.draw(batch);
         witch.render(batch);
         waterball.render(batch);
+        cacodaemon.render(batch);
         if (isCrouched && isAttacking) {
             knightCrouchAttack.render(batch);
 
@@ -77,7 +83,7 @@ public class GameScreen implements Screen {
     private void update(float delta) {
         background.update(delta);
         witch.update(delta);
-
+        cacodaemon.update(delta);
 
         knightWalk.update(delta);
         waterball.update(delta);
@@ -168,6 +174,7 @@ public class GameScreen implements Screen {
         knightAttack.dispose();
         knightCrouch.dispose();
         knightJump.dispose();
+        cacodaemon.dispose();
         for (Rana rana : listaRanas) {
             rana.dispose();
         }
