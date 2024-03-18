@@ -182,7 +182,13 @@ public class GameScreen implements Screen {
         System.out.println("hola");
         try{
             socket = IO.socket("http://localhost:3001");
+            System.out.println(socket);
             socket.connect();
+            if(socket.connected()){
+                System.out.println("Conexión exitosa al servidor.");
+            } else {
+                System.out.println("La conexión al servidor ha fallado.");
+            }
             System.out.println("hola try 2");
 
         }catch(Exception e){
