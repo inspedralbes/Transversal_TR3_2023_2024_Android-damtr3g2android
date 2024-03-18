@@ -1,15 +1,17 @@
 package com.mygdx.game.screens;
 
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.objects.WaterBall;
-import com.mygdx.game.screens.Background;
+import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.objects.Cacodaemon;
 import com.mygdx.game.objects.Knight;
 import com.mygdx.game.objects.Rana;
+import com.mygdx.game.objects.WaterBall;
 import com.mygdx.game.objects.Witch;
 
 import java.util.ArrayList;
@@ -24,11 +26,15 @@ public class GameScreen implements Screen {
     private Knight knightWalk, knightAttack, knightCrouch, knightJump, knightCrouchAttack;
     private boolean isAttacking = false, isCrouched = false, isJumping = false;
     private List<Rana> listaRanas;
+    private Cacodaemon cacodaemon;
+
     private boolean jumpCooldownActive = false;
     private float jumpCooldownTimer = 0f;
     private static final float JUMP_COOLDOWN_DURATION = 1f;
     private float ranaSpawnTimer = 0f;
     private static final float RANA_SPAWN_INTERVAL = 10f;
+    private float elapsedTime = 0f; // Se agrega esta variable
+    private static final float TIENDA_INTERVAL = 10f; // Se agrega esta variable
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
@@ -41,6 +47,7 @@ public class GameScreen implements Screen {
         knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false);
         waterball = new WaterBall(new Vector2(500, 700));
         listaRanas = new ArrayList<>();
+        cacodaemon = new Cacodaemon(new Vector2(500, 700));
     }
 
     @Override
@@ -54,6 +61,7 @@ public class GameScreen implements Screen {
         batch.begin();
         background.draw(batch);
         witch.render(batch);
+        cacodaemon.render(batch);
         waterball.render(batch);
         if (isCrouched && isAttacking) {
             knightCrouchAttack.render(batch);
@@ -83,12 +91,12 @@ public class GameScreen implements Screen {
     }
 
     private void update(float delta) {
+        elapsedTime += delta; // Actualiza elapsedTime
         background.update(delta);
         witch.update(delta);
-
-
         knightWalk.update(delta);
         waterball.update(delta);
+        cacodaemon.update(delta);
         // Actualiza el tiempo de cooldown de salto si está activo
 
         if (jumpCooldownActive) {
@@ -176,6 +184,7 @@ public class GameScreen implements Screen {
         knightAttack.dispose();
         knightCrouch.dispose();
         knightJump.dispose();
+        cacodaemon.dispose();
         for (Rana rana : listaRanas) {
             rana.dispose();
         }

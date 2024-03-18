@@ -1,6 +1,8 @@
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,6 +16,7 @@ public class TiendaScreen implements Screen {
     private Texture backgroundTexture; // Texture para el fondo de pantalla
     private BitmapFont font;
     private Rectangle[] buttons;
+    private String userInput = ""; // Para almacenar la entrada de texto
 
     public TiendaScreen(SpriteBatch batch) {
         this.batch = batch;
@@ -52,6 +55,9 @@ public class TiendaScreen implements Screen {
         for (int i = 0; i < buttons.length; i++) {
             font.draw(batch, "Botón " + (i+1), buttons[i].x, buttons[i].y + buttons[i].height);
         }
+
+        // Dibujar el texto ingresado por el usuario
+        font.draw(batch, "Input: " + userInput, 50, Gdx.graphics.getHeight() - 50);
 
         batch.end();
 

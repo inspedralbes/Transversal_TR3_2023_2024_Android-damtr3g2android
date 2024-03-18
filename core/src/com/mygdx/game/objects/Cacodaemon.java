@@ -9,34 +9,41 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Cacodaemon {
     private TextureRegion[] walkFrames;
+    private TextureRegion[] deathFrames; // Nuevos frames para la animación de muerte
 
     private int currentFrameIndex;
     private Vector2 position;
     private Rectangle bounds;
 
-
     private static final int FRAME_WIDTH = 64;
     private static final int FRAME_HEIGHT = 64;
     private static final int FRAMES_IN_ROW_WALK = 6;
+    private static final int FRAMES_IN_ROW_DEATH = 4; // Número de frames para la animación de muerte
 
     private static final float FRAME_DURATION = 0.1f;
-
-
     private static final float SPEED = 1000f;
 
     private float stateTime;
     private boolean isAttacking;
+    private boolean isDying; // Flag para indicar si el personaje está muriendo
 
     private float attackTimer;
 
     public Cacodaemon(Vector2 position) {
         Texture WalkSpriteSheet = new Texture(Gdx.files.internal("Cacodaemon/Cacodaemon.png"));
+        Texture DeathSpriteSheet = new Texture(Gdx.files.internal("Cacodaemon/CacodaemonDeath.png"));
 
         walkFrames = new TextureRegion[FRAMES_IN_ROW_WALK];
+        deathFrames = new TextureRegion[FRAMES_IN_ROW_DEATH];
 
         for (int i = 0; i < FRAMES_IN_ROW_WALK; i++) {
             int index = (FRAMES_IN_ROW_WALK - 1) - i;
             walkFrames[i] = new TextureRegion(WalkSpriteSheet, index * FRAME_WIDTH, 0, FRAME_WIDTH, FRAME_HEIGHT);
+        }
+
+        for (int i = 0; i < FRAMES_IN_ROW_DEATH; i++) {
+            int index=(FRAMES_IN_ROW_DEATH -1 )-i;
+            deathFrames[i] = new TextureRegion(DeathSpriteSheet, i * FRAME_WIDTH, 0, FRAME_WIDTH, FRAME_HEIGHT);
         }
 
         this.position = new Vector2(Gdx.graphics.getWidth(), position.y);
@@ -48,41 +55,60 @@ public class Cacodaemon {
     public void update(float delta) {
         stateTime += delta;
 
-        if (attackTimer >= 5f) {
-            startAttack();
-            attackTimer = 0f;
-        }
+        if (isDying) {
+            currentFrameIndex = (int) (stateTime / FRAME_DURATION) % deathFrames.length;
+            if (stateTime >= FRAME_DURATION * deathFrames.length) {
+                // La animación de muerte ha terminado, aquí podrías realizar alguna acción adicional si es necesario
+                // Por ejemplo, eliminar el objeto de la lista de objetos del juego.
+                dispose();
+            }
+        } else {
 
-        if (isAttacking) {
-            currentFrameIndex = (int) (stateTime / FRAME_DURATION) % walkFrames.length;
-            if (stateTime >= FRAME_DURATION * walkFrames.length) {
+            if (attackTimer >= 5f) {
+                startAttack();
+                attackTimer = 0f;
+            }
+
+            if (isAttacking) {
+                currentFrameIndex = (int) (stateTime / FRAME_DURATION) % walkFrames.length;
+                if (stateTime >= FRAME_DURATION * walkFrames.length) {
+                    stateTime = 0;
+                    isAttacking = false;
+                    position.x -= SPEED * delta;
+                }
+            } else if (stateTime >= FRAME_DURATION) {
+                currentFrameIndex = (currentFrameIndex + 1) % walkFrames.length;
                 stateTime = 0;
-                isAttacking = false;
                 position.x -= SPEED * delta;
             }
-        } else if (stateTime >= FRAME_DURATION) {
-            currentFrameIndex = (currentFrameIndex + 1) % walkFrames.length;
-            stateTime = 0;
-            position.x -= SPEED * delta;
-        }
 
-        if (position.x + FRAME_WIDTH < 0) {
-            position.x = Gdx.graphics.getWidth();
+            if (position.x + FRAME_WIDTH < 0) {
+                position.x = Gdx.graphics.getWidth();
+            }
         }
     }
-
 
     public void render(SpriteBatch batch) {
         float screenWidth = Gdx.graphics.getWidth();
         float scale = screenWidth / 2000f;
         scale *= 2.7f;
 
-        batch.draw(walkFrames[currentFrameIndex], position.x, position.y, FRAME_WIDTH * scale, FRAME_HEIGHT * scale);
+        if (isDying) {
+            batch.draw(deathFrames[currentFrameIndex], position.x, position.y, FRAME_WIDTH * scale, FRAME_HEIGHT * scale);
+        } else {
+            batch.draw(walkFrames[currentFrameIndex], position.x, position.y, FRAME_WIDTH * scale, FRAME_HEIGHT * scale);
+        }
     }
 
     public void startAttack() {
         isAttacking = true;
         position.x -= SPEED * Gdx.graphics.getDeltaTime();
+        currentFrameIndex = 0;
+    }
+
+    public void startDeathAnimation() {
+        isDying = true;
+        stateTime = 0; // Reinicia el tiempo para la animación de muerte
         currentFrameIndex = 0;
     }
 
@@ -97,6 +123,9 @@ public class Cacodaemon {
 
     public void dispose() {
         for (TextureRegion frame : walkFrames) {
+            frame.getTexture().dispose();
+        }
+        for (TextureRegion frame : deathFrames) {
             frame.getTexture().dispose();
         }
     }

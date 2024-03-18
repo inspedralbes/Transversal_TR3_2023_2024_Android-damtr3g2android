@@ -17,7 +17,7 @@ public class MyGdxGame extends Game {
 
 	public static final int START_SCREEN = 0;
 	public static final int GAME_SCREEN = 1;
-	public static final int TIENDA_SCREEN = 2;
+	public static final int TIENDA_SCREEN = 3;
 
 	@Override
 	public void create () {
