@@ -57,11 +57,21 @@ public class WaterBall {
     }
 
     public void update(float deltaTime) {
-        // Incrementar stateTime con deltaTime
+        // Si ya ha pasado el tiempo necesario para reproducir la primera fila una vez
+        if (stateTime > (FRAME_DURATION * FRAMES_IN_COLUMN)) {
+            // Calcula el tiempo restante para actualizar el índice del fotograma actual
+            float remainingTime = stateTime - (FRAME_DURATION * FRAMES_IN_COLUMN);
+            // Calcula el índice del fotograma actual basado en el tiempo restante
+            currentFrameIndex = (int) (remainingTime / FRAME_DURATION) % (15 - FRAMES_IN_COLUMN) + FRAMES_IN_COLUMN;
+        } else {
+            // Si todavía está reproduciendo la primera fila, actualiza el índice normalmente
+            currentFrameIndex = (int) (stateTime / FRAME_DURATION);
+        }
+
+        // Incrementa stateTime con deltaTime
         stateTime += deltaTime;
-        // Calcular el índice del fotograma actual
-        currentFrameIndex = (int) (stateTime / FRAME_DURATION) % TOTAL_FRAMES;
     }
+
 
 
 }
