@@ -14,6 +14,7 @@ public class WaterBall {
     private static final int FRAMES_IN_COLUMN = 5;
     private static final int TOTAL_FRAMES = 20; // 5 filas x 4 columnas
     private static final float FRAME_DURATION = 0.1f;
+    private static final float SPEED_X = 100; // Velocidad horizontal de la waterball
 
     private float stateTime = 0;
     private int currentFrameIndex = 0;
@@ -67,6 +68,7 @@ public class WaterBall {
             // Si todavía está reproduciendo la primera fila, actualiza el índice normalmente
             currentFrameIndex = (int) (stateTime / FRAME_DURATION);
         }
+        position.x += SPEED_X * deltaTime;
 
         // Incrementa stateTime con deltaTime
         stateTime += deltaTime;

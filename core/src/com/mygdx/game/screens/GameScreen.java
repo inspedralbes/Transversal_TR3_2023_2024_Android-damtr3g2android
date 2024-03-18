@@ -150,6 +150,8 @@ public class GameScreen implements Screen {
             listaRanas.add(new Rana(new Vector2(0, -20), 100));
             ranaSpawnTimer = 0f;
         }
+
+
     }
 
     @Override
