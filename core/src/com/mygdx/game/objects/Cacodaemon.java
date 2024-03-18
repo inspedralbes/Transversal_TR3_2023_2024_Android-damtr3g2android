@@ -82,7 +82,7 @@ public class Cacodaemon {
     }
 
     public Rectangle getBounds() {
-        return bounds;
+        return new Rectangle(position.x, position.y, FRAME_WIDTH, FRAME_WIDTH);
     }
 
     public void setPosition(Vector2 position) {

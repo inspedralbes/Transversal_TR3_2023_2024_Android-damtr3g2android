@@ -49,8 +49,6 @@ public class GameScreen implements Screen {
         knightCrouch = new Knight(new Vector2(-150, 0), 15, 4,true);
         knightJump = new Knight(new Vector2(-150, 200), 22, 5,false);
         knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false);
-
-        waterball = new WaterBall(new Vector2(120, 750));
         listaRanas = new ArrayList<>();
         listaCacodaemon = new ArrayList<>();
         listaWaterBalls = new ArrayList<>();
@@ -67,7 +65,6 @@ public class GameScreen implements Screen {
         batch.begin();
         background.draw(batch);
         witch.render(batch);
-        waterball.render(batch);
         if (isCrouched && isAttacking) {
             knightCrouchAttack.render(batch);
 
@@ -99,7 +96,6 @@ public class GameScreen implements Screen {
         witch.update(delta);
 
         knightWalk.update(delta);
-        waterball.update(delta);
         // Actualiza el tiempo de cooldown de salto si está activo
 
         if (jumpCooldownActive) {
@@ -181,6 +177,19 @@ public class GameScreen implements Screen {
             Vector2 waterballPosition = new Vector2(120, 750); // Ajusta la posición según necesites
             WaterBall newWaterball = new WaterBall(waterballPosition);
             listaWaterBalls.add(newWaterball);
+        }
+        for (Iterator<Cacodaemon> cacodaemonIterator = listaCacodaemon.iterator(); cacodaemonIterator.hasNext();) {
+            Cacodaemon cacodaemon = cacodaemonIterator.next();
+            for (Iterator<WaterBall> waterBallIterator = listaWaterBalls.iterator(); waterBallIterator.hasNext();) {
+                WaterBall waterBall = waterBallIterator.next();
+                if (cacodaemon.getBounds().overlaps(waterBall.getBounds())) {
+                    // Colisión detectada, realiza las acciones necesarias
+                    // Por ejemplo, eliminar la WaterBall y reducir la vida del Cacodaemon
+                    waterBallIterator.remove(); // Elimina la WaterBall
+                    cacodaemon.dispose(); // Reducción de la vida del Cacodaemon
+
+                }
+            }
         }
     }
 
