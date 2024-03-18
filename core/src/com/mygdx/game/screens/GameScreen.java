@@ -30,10 +30,6 @@ public class GameScreen implements Screen {
     private float ranaSpawnTimer = 0f;
     private static final float RANA_SPAWN_INTERVAL = 10f;
 
-    private boolean jumpCooldownActive = false;
-    private float jumpCooldownTimer = 0f;
-    private static final float JUMP_COOLDOWN_DURATION = 1f;
-
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
         background = new Background();
@@ -76,14 +72,14 @@ public class GameScreen implements Screen {
             rana.render(batch);
         }
         batch.end();
-
+        /*
         // Verifica si ha pasado el tiempo para mostrar la tienda
         if (elapsedTime >= TIENDA_INTERVAL) {
             // Cambia a la pantalla de la tienda
             ((MyGdxGame) Gdx.app.getApplicationListener()).changeScreen(MyGdxGame.TIENDA_SCREEN);
             // Reinicia el temporizador
             elapsedTime = 0;
-        }
+        }*/
     }
 
     private void update(float delta) {

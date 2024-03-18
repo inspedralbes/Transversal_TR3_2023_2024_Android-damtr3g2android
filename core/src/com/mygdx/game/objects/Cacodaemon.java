@@ -14,14 +14,19 @@ public class Cacodaemon {
     private Vector2 position;
     private Rectangle bounds;
 
+
     private static final int FRAME_WIDTH = 64;
     private static final int FRAME_HEIGHT = 64;
     private static final int FRAMES_IN_ROW_WALK = 6;
+
     private static final float FRAME_DURATION = 0.1f;
+
+
     private static final float SPEED = 1000f;
 
     private float stateTime;
     private boolean isAttacking;
+
     private float attackTimer;
 
     public Cacodaemon(Vector2 position) {
