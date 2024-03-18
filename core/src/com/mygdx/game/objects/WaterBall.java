@@ -74,6 +74,13 @@ public class WaterBall {
         stateTime += deltaTime;
     }
 
+    public void dispose() {
+        // Dispose de la textura
+        for (TextureRegion frame : frames) {
+            frame.getTexture().dispose();
+        }
+    }
+
 
 
 }

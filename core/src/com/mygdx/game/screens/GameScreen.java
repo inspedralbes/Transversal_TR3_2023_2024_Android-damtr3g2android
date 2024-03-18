@@ -27,6 +27,7 @@ public class GameScreen implements Screen {
     private Knight knightWalk, knightAttack, knightCrouch, knightJump, knightCrouchAttack;
     private boolean isAttacking = false, isCrouched = false, isJumping = false;
     private List<Rana> listaRanas;
+    private List<WaterBall> listaWaterBalls;
     private boolean jumpCooldownActive = false;
     private float jumpCooldownTimer = 0f;
     private static final float JUMP_COOLDOWN_DURATION = 1f;
@@ -44,8 +45,9 @@ public class GameScreen implements Screen {
         knightJump = new Knight(new Vector2(-150, 200), 22, 5,false);
         knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false);
 
-        waterball = new WaterBall(new Vector2(500, 700));
+        waterball = new WaterBall(new Vector2(120, 750));
         listaRanas = new ArrayList<>();
+        listaWaterBalls = new ArrayList<>();
     }
 
     @Override
@@ -76,6 +78,9 @@ public class GameScreen implements Screen {
         }
         for (Rana rana : listaRanas) {
             rana.render(batch);
+        }
+        for (WaterBall waterBall : listaWaterBalls) {
+            waterBall.render(batch);
         }
         batch.end();
     }
@@ -145,13 +150,21 @@ public class GameScreen implements Screen {
         for (Rana rana : listaRanas) {
             rana.update(delta);
         }
+        for (WaterBall waterBall : listaWaterBalls) {
+            waterBall.update(delta);
+        }
         ranaSpawnTimer += delta;
         if (ranaSpawnTimer >= RANA_SPAWN_INTERVAL) {
             listaRanas.add(new Rana(new Vector2(0, -20), 100));
             ranaSpawnTimer = 0f;
         }
 
-
+        // Generar WaterBalls cuando se presiona la tecla 'T'
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+            Vector2 waterballPosition = new Vector2(120, 750); // Ajusta la posición según necesites
+            WaterBall newWaterball = new WaterBall(waterballPosition);
+            listaWaterBalls.add(newWaterball);
+        }
     }
 
     @Override
@@ -179,6 +192,9 @@ public class GameScreen implements Screen {
         cacodaemon.dispose();
         for (Rana rana : listaRanas) {
             rana.dispose();
+        }
+        for (WaterBall waterBall : listaWaterBalls) {
+            waterBall.dispose();
         }
     }
 }
