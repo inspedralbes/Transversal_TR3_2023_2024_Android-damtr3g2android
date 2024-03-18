@@ -23,19 +23,17 @@ public class GameScreen implements Screen {
     private boolean isAttacking = false;
 
     private float elapsedTime = 0;
-    private static final float TIENDA_INTERVAL = 30;
+    private static final float TIENDA_INTERVAL = 10;
 
     //Boses
     private DemonFly demonFly;
     private Rana rana;
     private TempanoHielo tempanodehielo;
     private Cacodaemon cacodaemon;
-<<<<<<< Updated upstream
-=======
+
     private boolean jumpCooldownActive = false;
     private float jumpCooldownTimer = 0f;
     private static final float JUMP_COOLDOWN_DURATION = 1f;
->>>>>>> Stashed changes
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
