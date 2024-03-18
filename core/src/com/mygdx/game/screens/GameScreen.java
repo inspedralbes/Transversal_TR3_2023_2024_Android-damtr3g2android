@@ -6,30 +6,29 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.objects.Cacodaemon;
-import com.mygdx.game.objects.DemonFly;
+import com.mygdx.game.objects.WaterBall;
+import com.mygdx.game.screens.Background;
 import com.mygdx.game.objects.Knight;
 import com.mygdx.game.objects.Rana;
-import com.mygdx.game.objects.TempanoHielo;
 import com.mygdx.game.objects.Witch;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private Background background;
-    //
+    private WaterBall waterball;
     private Witch witch;
-    private Knight knightWalk, knightAttack;
-    private boolean isAttacking = false;
-
-    private float elapsedTime = 0;
-    private static final float TIENDA_INTERVAL = 10;
-
-    //Boses
-    private DemonFly demonFly;
-    private Rana rana;
-    private TempanoHielo tempanodehielo;
-    private Cacodaemon cacodaemon;
+    private Knight knightWalk, knightAttack, knightCrouch, knightJump, knightCrouchAttack;
+    private boolean isAttacking = false, isCrouched = false, isJumping = false;
+    private List<Rana> listaRanas;
+    private boolean jumpCooldownActive = false;
+    private float jumpCooldownTimer = 0f;
+    private static final float JUMP_COOLDOWN_DURATION = 1f;
+    private float ranaSpawnTimer = 0f;
+    private static final float RANA_SPAWN_INTERVAL = 10f;
 
     private boolean jumpCooldownActive = false;
     private float jumpCooldownTimer = 0f;
@@ -37,50 +36,45 @@ public class GameScreen implements Screen {
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
-        // Crea el fondo del juego
         background = new Background();
-        // Crea la bruja del juego en la posición inicial
-        witch = new Witch(new Vector2(100, 100));
-        demonFly = new DemonFly(new Vector2(300, 100));
-
-        knightWalk = new Knight(new Vector2(300, 100), 2, 8);
-        knightAttack = new Knight(new Vector2(300, 100), 9, 5);
-
-        rana = new Rana(new Vector2(500, 100),100);
-        tempanodehielo = new TempanoHielo(new Vector2(500, 50));
-        cacodaemon = new Cacodaemon(new Vector2(100, 900));
+        witch = new Witch(new Vector2(0, 700));
+        knightWalk = new Knight(new Vector2(-150, 0), 2, 8,false);
+        knightAttack = new Knight(new Vector2(0, 0), 9, 5,false);
+        knightCrouch = new Knight(new Vector2(-150, 0), 15, 4,true);
+        knightJump = new Knight(new Vector2(-150, 200), 22, 5,false);
+        knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false);
+        waterball = new WaterBall(new Vector2(500, 700));
+        listaRanas = new ArrayList<>();
     }
 
     @Override
-    public void show() {
-        // Este método se llama cuando la pantalla se vuelve visible
-    }
+    public void show() {}
 
     @Override
     public void render(float delta) {
-        elapsedTime += delta; // Incrementa el tiempo transcurrido
-        // Actualiza la lógica del juego
         update(delta);
-
-        // Limpia la pantalla
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         batch.begin();
-        // Dibuja el fondo del juego
         background.draw(batch);
-        // Dibuja la bruja del juego
         witch.render(batch);
+        waterball.render(batch);
+        if (isCrouched && isAttacking) {
+            knightCrouchAttack.render(batch);
 
-        demonFly.render(batch);
-        if (isAttacking) {
+        }
+        else if (isAttacking) {
             knightAttack.render(batch);
+        } else if (isCrouched) {
+            knightCrouch.render(batch);
+        } else if (isJumping) {
+            knightJump.render(batch);
         } else {
             knightWalk.render(batch);
         }
-        rana.render(batch);
-        tempanodehielo.render(batch);
-        cacodaemon.render(batch);
+        for (Rana rana : listaRanas) {
+            rana.render(batch);
+        }
         batch.end();
 
         // Verifica si ha pasado el tiempo para mostrar la tienda
@@ -93,61 +87,101 @@ public class GameScreen implements Screen {
     }
 
     private void update(float delta) {
-        // Actualiza la lógica del fondo del juego
         background.update(delta);
-        // Actualiza la lógica de la bruja del juego
         witch.update(delta);
-        demonFly.update(delta);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.A) && !isAttacking) {
+
+
+        knightWalk.update(delta);
+        waterball.update(delta);
+        // Actualiza el tiempo de cooldown de salto si está activo
+
+        if (jumpCooldownActive) {
+            jumpCooldownTimer -= delta;
+            if (jumpCooldownTimer <= 0) {
+                jumpCooldownActive = false;
+            }
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            isCrouched = true;
+            if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
+                isAttacking = true;
+                for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext();) {
+                    Rana rana = iterator.next();
+                    if (knightCrouchAttack.getBounds().overlaps(rana.getBounds())) {
+                        rana.setVida(0);
+                    }
+                }
+            }
+        } else {
+            isCrouched = false;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
             isAttacking = true;
-            // Reinicia la animación de ataque
             knightAttack.resetAnimation();
+            for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext();) {
+                Rana rana = iterator.next();
+                if (knightAttack.getBounds().overlaps(rana.getBounds())) {
+                    rana.setVida(0);
+                }
+            }
         }
         if (isAttacking) {
             knightAttack.update(delta);
             if (knightAttack.isAnimationFinished()) {
                 isAttacking = false;
             }
-        } else {
-            knightWalk.update(delta);
         }
-        rana.update(delta);
-        cacodaemon.update(delta);
-        tempanodehielo.update(delta);
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && !isJumping && !jumpCooldownActive) {
+            isJumping = true;
+            knightJump.resetAnimation();
+            jumpCooldownActive = true;
+            jumpCooldownTimer = JUMP_COOLDOWN_DURATION;
+        }
+        if (isJumping) {
+            knightJump.updateSalto(delta);
+            if (knightJump.isAnimationFinished()) {
+                isJumping = false;
+            }
+        }
+        if (isCrouched && isAttacking) {
+            knightCrouchAttack.update(delta);
+        } else if (isCrouched) {
+            knightCrouch.update(delta);
+        }
+        for (Rana rana : listaRanas) {
+            rana.update(delta);
+        }
+        ranaSpawnTimer += delta;
+        if (ranaSpawnTimer >= RANA_SPAWN_INTERVAL) {
+            listaRanas.add(new Rana(new Vector2(0, -20), 100));
+            ranaSpawnTimer = 0f;
+        }
     }
 
     @Override
     public void resize(int width, int height) {
-        // Actualiza el viewport del Batch
         batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
     }
 
     @Override
-    public void pause() {
-        // Este método se llama cuando el juego se pausa
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-        // Este método se llama cuando el juego se reanuda después de haber estado pausado
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-        // Este método se llama cuando la pantalla ya no es la actual
-    }
+    public void hide() {}
 
     @Override
     public void dispose() {
-        // Libera los recursos del fondo del juego
         background.dispose();
-        // Libera los recursos de la bruja del juego
         witch.dispose();
-        demonFly.dispose();
         knightWalk.dispose();
         knightAttack.dispose();
-        rana.dispose();
-        cacodaemon.dispose();
-        tempanodehielo.dispose();
+        knightCrouch.dispose();
+        knightJump.dispose();
+        for (Rana rana : listaRanas) {
+            rana.dispose();
+        }
     }
 }

@@ -23,23 +23,28 @@ public class Knight {
 
     private float stateTime;
 
-    public Knight(Vector2 position, int fila, int columna) {
+    public Knight(Vector2 position, int fila, int columna, boolean agachar) {
         Texture spriteSheet = new Texture(Gdx.files.internal("Fire_Warrior-Sheet.png"));
 
-        frames = new TextureRegion[columna];
+        int initialFrame = agachar ? 1 : 0; // Si agachar es true, omitir la primera posición
+
+        frames = new TextureRegion[columna - initialFrame]; // Ajustar la longitud del arreglo de frames
+
         int frameWidth = spriteSheet.getWidth() / SPRITESHEET_COLS;
         int frameHeight = spriteSheet.getHeight() / SPRITESHEET_ROWS;
 
         int rowIndex = fila; // Índice de la tercera fila (empezando desde 0)
 
-        for (int j = 0; j < columna; j++) {
-            frames[j] = new TextureRegion(spriteSheet, j * frameWidth, rowIndex * frameHeight, frameWidth, frameHeight);
+        for (int j = initialFrame; j < columna; j++) {
+            frames[j - initialFrame] = new TextureRegion(spriteSheet, j * frameWidth, rowIndex * frameHeight, frameWidth, frameHeight);
         }
 
         this.position = position;
         this.bounds = new Rectangle(position.x, position.y, frameWidth, frameHeight);
-        this.totalFrames = columna;
+        this.totalFrames = columna - initialFrame; // Ajustar el número total de frames
     }
+
+
 
     public void update(float delta) {
         stateTime += delta;
@@ -50,13 +55,31 @@ public class Knight {
         }
     }
 
+    public void updateSalto(float delta) {
+        stateTime += delta;
+
+        if (stateTime >= 0.15f) {
+            currentFrameIndex = (currentFrameIndex + 1) % totalFrames;
+            stateTime = 0;
+        }
+    }
+
+    public void updateAgachar(float delta) {
+        stateTime += delta;
+
+        if (stateTime >= 0.40f) {
+            currentFrameIndex = (currentFrameIndex + 1) % totalFrames;
+            stateTime = 0;
+        }
+    }
+
     public void render(SpriteBatch batch) {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
         // Calcular la escala en función del ancho de la pantalla
-        float scale = screenWidth / 800f; // Suponiendo que el tamaño base de la bruja sea para una pantalla de ancho 800
-        scale *= 5f; // Aumentar la escala en un 50%
+        float scale = screenWidth / 1080f; // Suponiendo que el tamaño base de la bruja sea para una pantalla de ancho 800
+        scale *= 7f; // Aumentar la escala en un 50%
 
         // Dibujar el fotograma actual con la escala calculada
         batch.draw(frames[currentFrameIndex], position.x, position.y, FRAME_WIDTH * scale, FRAME_HEIGHT * scale);
@@ -83,4 +106,5 @@ public class Knight {
     public void dispose() {
         frames[0].getTexture().dispose();
     }
+
 }

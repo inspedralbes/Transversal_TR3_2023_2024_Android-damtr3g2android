@@ -52,7 +52,7 @@ public class Witch {
         float screenHeight = Gdx.graphics.getHeight();
 
         // Calcular la escala en función del ancho de la pantalla
-        float scale = screenWidth / 800f; // Suponiendo que el tamaño base de la bruja sea para una pantalla de ancho 800
+        float scale = screenWidth / 1080f; // Suponiendo que el tamaño base de la bruja sea para una pantalla de ancho 800
         scale *= 2.7f; // Aumentar la escala en un 50%
 
         // Dibujar el fotograma actual con la escala calculada
