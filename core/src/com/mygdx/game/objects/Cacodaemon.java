@@ -25,7 +25,7 @@ public class Cacodaemon {
     private float attackTimer;
 
     public Cacodaemon(Vector2 position) {
-        Texture WalkSpriteSheet = new Texture(Gdx.files.internal("Cacodaemon/Cacodaemon.png"));
+        Texture WalkSpriteSheet = new Texture(Gdx.files.internal("MinionDragon/MinionDragonVolar.png"));
 
         walkFrames = new TextureRegion[FRAMES_IN_ROW_WALK];
 
