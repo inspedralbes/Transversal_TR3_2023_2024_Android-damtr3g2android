@@ -47,7 +47,7 @@ public class GameScreen implements Screen {
         knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false);
         waterball = new WaterBall(new Vector2(500, 700));
         listaRanas = new ArrayList<>();
-        cacodaemon = new Cacodaemon(new Vector2(500, 700));
+        //cacodaemon = new Cacodaemon(new Vector2(500, 700));
     }
 
     @Override
