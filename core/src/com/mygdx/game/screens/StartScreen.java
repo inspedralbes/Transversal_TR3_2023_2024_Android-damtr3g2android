@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.audio.Music; // Importar la clase Music de LibGDX
 import com.mygdx.game.MyGdxGame;
 
 public class StartScreen implements Screen {
@@ -16,6 +17,7 @@ public class StartScreen implements Screen {
     private Texture startScreenTexture;
     private BitmapFont font;
     private Rectangle startButton;
+    private Music backgroundMusic; // Variable para la música de fondo
 
     public StartScreen(SpriteBatch batch) {
         this.batch = batch;
@@ -32,6 +34,11 @@ public class StartScreen implements Screen {
         float buttonX = (Gdx.graphics.getWidth() - buttonWidth) / 2;
         float buttonY = (Gdx.graphics.getHeight() - buttonHeight) / 2;
         startButton = new Rectangle(buttonX, buttonY, buttonWidth, buttonHeight);
+
+        // Cargar la música de fondo
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music/dragon-ball.mp3"));
+        backgroundMusic.setLooping(true); // Para reproducir la música en bucle
+        backgroundMusic.play(); // Comenzar a reproducir la música
     }
 
     private void createStartScreenTexture() {
@@ -97,7 +104,6 @@ public class StartScreen implements Screen {
         batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
     }
 
-
     @Override
     public void pause() {
         // Este método se llama cuando el juego se pausa
@@ -110,7 +116,8 @@ public class StartScreen implements Screen {
 
     @Override
     public void hide() {
-        // Este método se llama cuando la pantalla ya no es la actual
+        backgroundMusic.stop();
+        backgroundMusic.dispose();
     }
 
     @Override
@@ -118,5 +125,8 @@ public class StartScreen implements Screen {
         // Libera los recursos de la textura de la pantalla de inicio y la fuente
         startScreenTexture.dispose();
         font.dispose();
+        // Detener y liberar la música
+        backgroundMusic.stop();
+        backgroundMusic.dispose();
     }
 }
