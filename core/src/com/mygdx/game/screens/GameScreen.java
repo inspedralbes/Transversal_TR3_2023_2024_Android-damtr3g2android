@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
+
 public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private Background background;
@@ -29,6 +32,7 @@ public class GameScreen implements Screen {
     private static final float JUMP_COOLDOWN_DURATION = 1f;
     private float ranaSpawnTimer = 0f;
     private static final float RANA_SPAWN_INTERVAL = 10f;
+    private Socket socket;
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
@@ -41,6 +45,7 @@ public class GameScreen implements Screen {
         knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false);
         waterball = new WaterBall(new Vector2(500, 700));
         listaRanas = new ArrayList<>();
+        connectSocket();
     }
 
     @Override
@@ -170,6 +175,15 @@ public class GameScreen implements Screen {
         knightJump.dispose();
         for (Rana rana : listaRanas) {
             rana.dispose();
+        }
+    }
+
+    public void connectSocket(){
+        try{
+            socket = IO.socket("http://localhost:3000");
+            socket.connect();
+        }catch(Exception e){
+            System.out.println(e);
         }
     }
 }
