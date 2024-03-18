@@ -27,18 +27,23 @@ public class GameScreen implements Screen {
     private Knight knightWalk, knightAttack, knightCrouch, knightJump, knightCrouchAttack;
     private boolean isAttacking = false, isCrouched = false, isJumping = false;
     private List<Rana> listaRanas;
+    private List<Cacodaemon> listaCacodaemon;
     private List<WaterBall> listaWaterBalls;
     private boolean jumpCooldownActive = false;
     private float jumpCooldownTimer = 0f;
     private static final float JUMP_COOLDOWN_DURATION = 1f;
     private float ranaSpawnTimer = 0f;
+    private float cacodaemonSpawnTimer = 0f;
+    private static final float CACODAEMON_SPAWN_TIMER = 10f;
+
     private static final float RANA_SPAWN_INTERVAL = 10f;
+
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
         background = new Background();
         witch = new Witch(new Vector2(0, 700));
-        cacodaemon = new Cacodaemon(new Vector2(300, 700));
+
         knightWalk = new Knight(new Vector2(-150, 0), 2, 8,false);
         knightAttack = new Knight(new Vector2(0, 0), 9, 5,false);
         knightCrouch = new Knight(new Vector2(-150, 0), 15, 4,true);
@@ -47,6 +52,7 @@ public class GameScreen implements Screen {
 
         waterball = new WaterBall(new Vector2(120, 750));
         listaRanas = new ArrayList<>();
+        listaCacodaemon = new ArrayList<>();
         listaWaterBalls = new ArrayList<>();
     }
 
@@ -62,7 +68,6 @@ public class GameScreen implements Screen {
         background.draw(batch);
         witch.render(batch);
         waterball.render(batch);
-        cacodaemon.render(batch);
         if (isCrouched && isAttacking) {
             knightCrouchAttack.render(batch);
 
@@ -79,6 +84,10 @@ public class GameScreen implements Screen {
         for (Rana rana : listaRanas) {
             rana.render(batch);
         }
+
+        for(Cacodaemon cacodaemon :listaCacodaemon){
+            cacodaemon.render(batch);
+        }
         for (WaterBall waterBall : listaWaterBalls) {
             waterBall.render(batch);
         }
@@ -88,7 +97,6 @@ public class GameScreen implements Screen {
     private void update(float delta) {
         background.update(delta);
         witch.update(delta);
-        cacodaemon.update(delta);
 
         knightWalk.update(delta);
         waterball.update(delta);
@@ -150,6 +158,9 @@ public class GameScreen implements Screen {
         for (Rana rana : listaRanas) {
             rana.update(delta);
         }
+        for (Cacodaemon cacodaemon : listaCacodaemon) {
+            cacodaemon.update(delta);
+        }
         for (WaterBall waterBall : listaWaterBalls) {
             waterBall.update(delta);
         }
@@ -157,6 +168,12 @@ public class GameScreen implements Screen {
         if (ranaSpawnTimer >= RANA_SPAWN_INTERVAL) {
             listaRanas.add(new Rana(new Vector2(0, -20), 100));
             ranaSpawnTimer = 0f;
+        }
+
+        cacodaemonSpawnTimer += delta;
+        if (cacodaemonSpawnTimer >= CACODAEMON_SPAWN_TIMER) {
+            listaCacodaemon.add(new Cacodaemon(new Vector2(300,700)));
+            cacodaemonSpawnTimer = 0f;
         }
 
         // Generar WaterBalls cuando se presiona la tecla 'T'
