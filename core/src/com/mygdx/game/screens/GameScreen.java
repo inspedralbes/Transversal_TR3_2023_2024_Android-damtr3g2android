@@ -7,8 +7,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.objects.Cacodaemon;
+import com.mygdx.game.objects.WaterBall;
+import com.mygdx.game.screens.Background;
 import com.mygdx.game.objects.Knight;
 import com.mygdx.game.objects.Rana;
 import com.mygdx.game.objects.WaterBall;
@@ -22,32 +23,39 @@ public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private Background background;
     private WaterBall waterball;
+
+    private Cacodaemon cacodaemon;
     private Witch witch;
     private Knight knightWalk, knightAttack, knightCrouch, knightJump, knightCrouchAttack;
     private boolean isAttacking = false, isCrouched = false, isJumping = false;
     private List<Rana> listaRanas;
-    private Cacodaemon cacodaemon;
-
+    private List<Cacodaemon> listaCacodaemon;
+    private List<WaterBall> listaWaterBalls;
     private boolean jumpCooldownActive = false;
     private float jumpCooldownTimer = 0f;
     private static final float JUMP_COOLDOWN_DURATION = 1f;
     private float ranaSpawnTimer = 0f;
+    private float cacodaemonSpawnTimer = 0f;
+    private static final float CACODAEMON_SPAWN_TIMER = 10f;
+
     private static final float RANA_SPAWN_INTERVAL = 10f;
     private float elapsedTime = 0f; // Se agrega esta variable
     private static final float TIENDA_INTERVAL = 10f; // Se agrega esta variable
+
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
         background = new Background();
         witch = new Witch(new Vector2(0, 700));
+
         knightWalk = new Knight(new Vector2(-150, 0), 2, 8,false);
         knightAttack = new Knight(new Vector2(0, 0), 9, 5,false);
         knightCrouch = new Knight(new Vector2(-150, 0), 15, 4,true);
         knightJump = new Knight(new Vector2(-150, 200), 22, 5,false);
         knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false);
-        waterball = new WaterBall(new Vector2(500, 700));
         listaRanas = new ArrayList<>();
-        //cacodaemon = new Cacodaemon(new Vector2(500, 700));
+        listaCacodaemon = new ArrayList<>();
+        listaWaterBalls = new ArrayList<>();
     }
 
     @Override
@@ -61,8 +69,6 @@ public class GameScreen implements Screen {
         batch.begin();
         background.draw(batch);
         witch.render(batch);
-        cacodaemon.render(batch);
-        waterball.render(batch);
         if (isCrouched && isAttacking) {
             knightCrouchAttack.render(batch);
 
@@ -79,6 +85,13 @@ public class GameScreen implements Screen {
         for (Rana rana : listaRanas) {
             rana.render(batch);
         }
+
+        for(Cacodaemon cacodaemon :listaCacodaemon){
+            cacodaemon.render(batch);
+        }
+        for (WaterBall waterBall : listaWaterBalls) {
+            waterBall.render(batch);
+        }
         batch.end();
         /*
         // Verifica si ha pasado el tiempo para mostrar la tienda
@@ -94,9 +107,8 @@ public class GameScreen implements Screen {
         elapsedTime += delta; // Actualiza elapsedTime
         background.update(delta);
         witch.update(delta);
+
         knightWalk.update(delta);
-        waterball.update(delta);
-        cacodaemon.update(delta);
         // Actualiza el tiempo de cooldown de salto si está activo
 
         if (jumpCooldownActive) {
@@ -155,10 +167,42 @@ public class GameScreen implements Screen {
         for (Rana rana : listaRanas) {
             rana.update(delta);
         }
+        for (Cacodaemon cacodaemon : listaCacodaemon) {
+            cacodaemon.update(delta);
+        }
+        for (WaterBall waterBall : listaWaterBalls) {
+            waterBall.update(delta);
+        }
         ranaSpawnTimer += delta;
         if (ranaSpawnTimer >= RANA_SPAWN_INTERVAL) {
             listaRanas.add(new Rana(new Vector2(0, -20), 100));
             ranaSpawnTimer = 0f;
+        }
+
+        cacodaemonSpawnTimer += delta;
+        if (cacodaemonSpawnTimer >= CACODAEMON_SPAWN_TIMER) {
+            listaCacodaemon.add(new Cacodaemon(new Vector2(300,700)));
+            cacodaemonSpawnTimer = 0f;
+        }
+
+        // Generar WaterBalls cuando se presiona la tecla 'T'
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+            Vector2 waterballPosition = new Vector2(120, 750); // Ajusta la posición según necesites
+            WaterBall newWaterball = new WaterBall(waterballPosition);
+            listaWaterBalls.add(newWaterball);
+        }
+        for (Iterator<Cacodaemon> cacodaemonIterator = listaCacodaemon.iterator(); cacodaemonIterator.hasNext();) {
+            Cacodaemon cacodaemon = cacodaemonIterator.next();
+            for (Iterator<WaterBall> waterBallIterator = listaWaterBalls.iterator(); waterBallIterator.hasNext();) {
+                WaterBall waterBall = waterBallIterator.next();
+                if (cacodaemon.getBounds().overlaps(waterBall.getBounds())) {
+                    // Colisión detectada, realiza las acciones necesarias
+                    // Por ejemplo, eliminar la WaterBall y reducir la vida del Cacodaemon
+                    waterBallIterator.remove(); // Elimina la WaterBall
+                    cacodaemon.dispose(); // Reducción de la vida del Cacodaemon
+
+                }
+            }
         }
     }
 
@@ -187,6 +231,9 @@ public class GameScreen implements Screen {
         cacodaemon.dispose();
         for (Rana rana : listaRanas) {
             rana.dispose();
+        }
+        for (WaterBall waterBall : listaWaterBalls) {
+            waterBall.dispose();
         }
     }
 }
