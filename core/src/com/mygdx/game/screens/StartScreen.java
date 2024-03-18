@@ -16,6 +16,8 @@ public class StartScreen implements Screen {
     private Texture startScreenTexture;
     private BitmapFont font;
     private Rectangle startButton;
+    private Rectangle createRoomButton;
+    private Rectangle joinRoomButton;
 
     public StartScreen(SpriteBatch batch) {
         this.batch = batch;
@@ -31,7 +33,9 @@ public class StartScreen implements Screen {
         float buttonHeight = Gdx.graphics.getHeight() / 15;
         float buttonX = (Gdx.graphics.getWidth() - buttonWidth) / 2;
         float buttonY = (Gdx.graphics.getHeight() - buttonHeight) / 2;
-        startButton = new Rectangle(buttonX, buttonY, buttonWidth, buttonHeight);
+        startButton = new Rectangle(buttonX, buttonY + 100, buttonWidth, buttonHeight);
+        createRoomButton = new Rectangle(buttonX, buttonY - 50, buttonWidth, buttonHeight);
+        joinRoomButton = new Rectangle(buttonX, buttonY - 200, buttonWidth, buttonHeight);
     }
 
     private void createStartScreenTexture() {
@@ -61,33 +65,43 @@ public class StartScreen implements Screen {
         // Dibuja la textura de la pantalla de inicio en la esquina superior izquierda
         batch.draw(startScreenTexture, 0, 0);
 
-        // Dibuja el texto del botón de inicio
+        // Dibuja el texto de los botones
         font.draw(batch, "Start Game", startButton.x, startButton.y + startButton.height);
+        font.draw(batch, "Create Room", createRoomButton.x, createRoomButton.y + createRoomButton.height);
+        font.draw(batch, "Join Room", joinRoomButton.x, joinRoomButton.y + joinRoomButton.height);
 
         batch.end();
 
-        // Verifica si se hizo clic en el botón de inicio
+        // Verifica si se hizo clic en algún botón
         if (Gdx.input.justTouched()) {
             // Obtiene las coordenadas del clic
             float x = Gdx.input.getX();
             float y = Gdx.graphics.getHeight() - Gdx.input.getY();
 
-            // Verifica si el clic ocurrió dentro del área del botón de inicio
+            // Verifica si el clic ocurrió dentro del área de algún botón
             if (startButton.contains(x, y)) {
                 // Si se hizo clic en el botón de inicio, cambia a la pantalla de juego
                 ((MyGdxGame) Gdx.app.getApplicationListener()).changeScreen(MyGdxGame.GAME_SCREEN);
+            } else if (createRoomButton.contains(x, y)) {
+                // Si se hizo clic en el botón de crear sala, ejecutar la acción correspondiente
+                // Aquí puedes implementar la lógica para crear una sala
+            } else if (joinRoomButton.contains(x, y)) {
+                // Si se hizo clic en el botón de unirse a la sala, ejecutar la acción correspondiente
+                // Aquí puedes implementar la lógica para unirse a una sala
             }
         }
     }
 
     @Override
     public void resize(int width, int height) {
-        // Reajusta el tamaño y la posición del botón de inicio al cambiar el tamaño de la ventana
+        // Reajusta el tamaño y la posición de los botones al cambiar el tamaño de la ventana
         float buttonWidth = width / 4;
         float buttonHeight = height / 15;
         float buttonX = (width - buttonWidth) / 2;
         float buttonY = (height - buttonHeight) / 2;
-        startButton.set(buttonX, buttonY, buttonWidth, buttonHeight);
+        startButton.set(buttonX, buttonY + 100, buttonWidth, buttonHeight);
+        createRoomButton.set(buttonX, buttonY - 50, buttonWidth, buttonHeight);
+        joinRoomButton.set(buttonX, buttonY - 200, buttonWidth, buttonHeight);
 
         // Actualiza el tamaño de la textura de fondo al cambiar el tamaño de la ventana
         startScreenTexture.dispose();
@@ -96,7 +110,6 @@ public class StartScreen implements Screen {
         // Actualiza el viewport del Batch
         batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
     }
-
 
     @Override
     public void pause() {
