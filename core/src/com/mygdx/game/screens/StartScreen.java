@@ -16,14 +16,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.MyGdxGame;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+
 public class StartScreen implements Screen {
+
+    private Socket socket;
     private final SpriteBatch batch;
     private Texture startScreenTexture;
     private BitmapFont font;
     private Rectangle startButton;
     private Rectangle createRoomButton;
     private Rectangle joinRoomButton;
-
+    private String inputText = "";
     private Stage stage;
     private TextField textField;
 
@@ -32,6 +43,7 @@ public class StartScreen implements Screen {
         createTextField();
         createStartScreenTexture();
         createFont();
+        connectSocket();
 
         float buttonWidth = Gdx.graphics.getWidth() / 4;
         float buttonHeight = Gdx.graphics.getHeight() / 15;
@@ -65,6 +77,16 @@ public class StartScreen implements Screen {
         textField = new TextField("", textFieldStyle);
         textField.setPosition(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2);
         textField.setSize(200, 40);
+
+        // Agregamos un Listener al TextField para manejar los cambios de texto
+        textField.setTextFieldListener(new TextField.TextFieldListener() {
+            @Override
+            public void keyTyped(TextField textField, char c) {
+                // Guardamos el texto ingresado en una variable
+                // En este ejemplo, la variable se llama "inputText"
+                inputText = textField.getText();
+            }
+        });
 
         stage.addActor(textField);
 
@@ -114,7 +136,10 @@ public class StartScreen implements Screen {
             if (startButton.contains(x, y)) {
                 ((MyGdxGame) Gdx.app.getApplicationListener()).changeScreen(MyGdxGame.GAME_SCREEN);
             } else if (createRoomButton.contains(x, y)) {
+                socket.emit("createRoom", inputText);
             } else if (joinRoomButton.contains(x, y)) {
+                socket.emit("joinRoom", inputText);
+                socket.emit("message", "HOLAAAAAAAAA");
             }
         }
     }
@@ -151,5 +176,41 @@ public class StartScreen implements Screen {
     public void dispose() {
         startScreenTexture.dispose();
         font.dispose();
+    }
+
+    public void connectSocket() {
+        try {
+            socket = IO.socket("http://localhost:3001"); // Change the IP address to your Node.js server's IP
+            socket.connect();
+
+            // Add listeners for any events you want to handle
+            socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    // Handle connection
+                    Gdx.app.log("SocketIO", "Connected");
+                }
+            }).on("message", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    // Handle incoming message
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        String message = data.getString("message");
+                        Gdx.app.log("SocketIO", "Received message: " + message);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    // Handle disconnection
+                    Gdx.app.log("SocketIO", "Disconnected");
+                }
+            });
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 }

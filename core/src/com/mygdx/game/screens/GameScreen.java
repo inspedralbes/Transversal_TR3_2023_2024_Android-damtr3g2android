@@ -37,7 +37,6 @@ public class GameScreen implements Screen {
     private static final float JUMP_COOLDOWN_DURATION = 1f;
     private float ranaSpawnTimer = 0f;
     private static final float RANA_SPAWN_INTERVAL = 10f;
-    private Socket socket;
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
@@ -50,7 +49,7 @@ public class GameScreen implements Screen {
         knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false);
         waterball = new WaterBall(new Vector2(500, 700));
         listaRanas = new ArrayList<>();
-        connectSocket();
+
     }
 
     @Override
@@ -178,45 +177,10 @@ public class GameScreen implements Screen {
         knightAttack.dispose();
         knightCrouch.dispose();
         knightJump.dispose();
-        socket.disconnect();
+
         for (Rana rana : listaRanas) {
             rana.dispose();
         }
     }
 
-    public void connectSocket() {
-        try {
-            socket = IO.socket("http://localhost:3001"); // Change the IP address to your Node.js server's IP
-            socket.connect();
-
-            // Add listeners for any events you want to handle
-            socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    // Handle connection
-                    Gdx.app.log("SocketIO", "Connected");
-                }
-            }).on("message", new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    // Handle incoming message
-                    JSONObject data = (JSONObject) args[0];
-                    try {
-                        String message = data.getString("message");
-                        Gdx.app.log("SocketIO", "Received message: " + message);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    // Handle disconnection
-                    Gdx.app.log("SocketIO", "Disconnected");
-                }
-            });
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
 }
