@@ -12,12 +12,17 @@ import com.mygdx.game.objects.Knight;
 import com.mygdx.game.objects.Rana;
 import com.mygdx.game.objects.Witch;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class GameScreen implements Screen {
     private final SpriteBatch batch;
@@ -173,26 +178,45 @@ public class GameScreen implements Screen {
         knightAttack.dispose();
         knightCrouch.dispose();
         knightJump.dispose();
+        socket.disconnect();
         for (Rana rana : listaRanas) {
             rana.dispose();
         }
     }
 
-    public void connectSocket(){
-        System.out.println("hola");
-        try{
-            socket = IO.socket("http://localhost:3001");
-            System.out.println(socket);
+    public void connectSocket() {
+        try {
+            socket = IO.socket("http://localhost:3001"); // Change the IP address to your Node.js server's IP
             socket.connect();
-            if(socket.connected()){
-                System.out.println("Conexión exitosa al servidor.");
-            } else {
-                System.out.println("La conexión al servidor ha fallado.");
-            }
-            System.out.println("hola try 2");
 
-        }catch(Exception e){
-            System.out.println(e);
+            // Add listeners for any events you want to handle
+            socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    // Handle connection
+                    Gdx.app.log("SocketIO", "Connected");
+                }
+            }).on("message", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    // Handle incoming message
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        String message = data.getString("message");
+                        Gdx.app.log("SocketIO", "Received message: " + message);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    // Handle disconnection
+                    Gdx.app.log("SocketIO", "Disconnected");
+                }
+            });
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
     }
 }
