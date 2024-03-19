@@ -15,19 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.MyGdxGame;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URISyntaxException;
-
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
+import com.mygdx.game.SocketManager;
 
 public class StartScreen implements Screen {
 
-    private Socket socket;
     private final SpriteBatch batch;
     private Texture startScreenTexture;
     private BitmapFont font;
@@ -43,7 +34,6 @@ public class StartScreen implements Screen {
         createTextField();
         createStartScreenTexture();
         createFont();
-        connectSocket();
 
         float buttonWidth = Gdx.graphics.getWidth() / 4;
         float buttonHeight = Gdx.graphics.getHeight() / 15;
@@ -112,20 +102,8 @@ public class StartScreen implements Screen {
 
     @Override
     public void show() {
-        socket.on("startGame", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                // Lógica para cambiar a la pantalla de juego
-                Gdx.app.postRunnable(new Runnable() {
-                    @Override
-                    public void run() {
-                        ((MyGdxGame) Gdx.app.getApplicationListener()).changeScreen(MyGdxGame.GAME_SCREEN);
-                    }
-                });
-            }
-        });
+        SocketManager.addStartGameListener();
     }
-
 
     @Override
     public void render(float delta) {
@@ -149,10 +127,9 @@ public class StartScreen implements Screen {
             if (startButton.contains(x, y)) {
                 ((MyGdxGame) Gdx.app.getApplicationListener()).changeScreen(MyGdxGame.GAME_SCREEN);
             } else if (createRoomButton.contains(x, y)) {
-                socket.emit("createRoom", inputText);
+                SocketManager.createRoom(inputText);
             } else if (joinRoomButton.contains(x, y)) {
-                socket.emit("joinRoom", inputText);
-                socket.emit("message", "HOLAAAAAAAAA");
+                SocketManager.joinRoom(inputText);
             }
         }
     }
@@ -189,41 +166,5 @@ public class StartScreen implements Screen {
     public void dispose() {
         startScreenTexture.dispose();
         font.dispose();
-    }
-
-    public void connectSocket() {
-        try {
-            socket = IO.socket("http://localhost:3001"); // Change the IP address to your Node.js server's IP
-            socket.connect();
-
-            // Add listeners for any events you want to handle
-            socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    // Handle connection
-                    Gdx.app.log("SocketIO", "Connected");
-                }
-            }).on("message", new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    // Handle incoming message
-                    JSONObject data = (JSONObject) args[0];
-                    try {
-                        String message = data.getString("message");
-                        Gdx.app.log("SocketIO", "Received message: " + message);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    // Handle disconnection
-                    Gdx.app.log("SocketIO", "Disconnected");
-                }
-            });
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
     }
 }

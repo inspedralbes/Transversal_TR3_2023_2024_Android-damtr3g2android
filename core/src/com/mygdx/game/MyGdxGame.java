@@ -20,6 +20,7 @@ public class MyGdxGame extends Game {
 		startScreen = new StartScreen(batch);
 		gameScreen = new GameScreen(batch);
 		AssetManagerWrapper.load();
+		SocketManager.connect();
 		// Configura la pantalla de inicio como la pantalla actual del juego
 		setScreen(startScreen);
 	}
