@@ -112,7 +112,20 @@ public class StartScreen implements Screen {
 
     @Override
     public void show() {
+        socket.on("startGame", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                // Lógica para cambiar a la pantalla de juego
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((MyGdxGame) Gdx.app.getApplicationListener()).changeScreen(MyGdxGame.GAME_SCREEN);
+                    }
+                });
+            }
+        });
     }
+
 
     @Override
     public void render(float delta) {
