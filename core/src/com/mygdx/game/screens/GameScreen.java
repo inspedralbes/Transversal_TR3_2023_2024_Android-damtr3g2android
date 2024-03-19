@@ -1,18 +1,16 @@
 package com.mygdx.game.screens;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.objects.Cacodaemon;
-import com.mygdx.game.objects.WaterBall;
-import com.mygdx.game.screens.Background;
-import com.mygdx.game.objects.Knight;
 import com.mygdx.game.objects.Rana;
 import com.mygdx.game.objects.WaterBall;
+import com.mygdx.game.objects.Knight;
 import com.mygdx.game.objects.Witch;
 
 import java.util.ArrayList;
@@ -24,7 +22,6 @@ public class GameScreen implements Screen {
     private Background background;
     private WaterBall waterball;
 
-    private Cacodaemon cacodaemon;
     private Witch witch;
     private Knight knightWalk, knightAttack, knightCrouch, knightJump, knightCrouchAttack;
     private boolean isAttacking = false, isCrouched = false, isJumping = false;
@@ -39,23 +36,28 @@ public class GameScreen implements Screen {
     private static final float CACODAEMON_SPAWN_TIMER = 10f;
 
     private static final float RANA_SPAWN_INTERVAL = 10f;
-    private float elapsedTime = 0f; // Se agrega esta variable
-    private static final float TIENDA_INTERVAL = 10f; // Se agrega esta variable
+    private float elapsedTime = 0f;
+    private static final float TIENDA_INTERVAL = 10f;
+    private BitmapFont font;
 
+    private boolean isRenderingAttack = false;
+    private boolean isRenderingCrouch = false;
+    private boolean isRenderingJump = false;
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
         background = new Background();
-        witch = new Witch(new Vector2(0, 700));
+        witch = new Witch(new Vector2(0, 700), 100);
 
-        knightWalk = new Knight(new Vector2(-150, 0), 2, 8,false);
-        knightAttack = new Knight(new Vector2(0, 0), 9, 5,false);
-        knightCrouch = new Knight(new Vector2(-150, 0), 15, 4,true);
-        knightJump = new Knight(new Vector2(-150, 200), 22, 5,false);
-        knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false);
+        knightWalk = new Knight(new Vector2(-150, 0), 2, 8,false, 100);
+        knightAttack = new Knight(new Vector2(0, 0), 9, 5,false, 100);
+        knightCrouch = new Knight(new Vector2(-150, 0), 15, 4,true, 100);
+        knightJump = new Knight(new Vector2(-150, 200), 22, 5,false, 100);
+        knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false, 100);
         listaRanas = new ArrayList<>();
         listaCacodaemon = new ArrayList<>();
         listaWaterBalls = new ArrayList<>();
+        font = new BitmapFont();
     }
 
     @Override
@@ -69,19 +71,20 @@ public class GameScreen implements Screen {
         batch.begin();
         background.draw(batch);
         witch.render(batch);
-        if (isCrouched && isAttacking) {
-            knightCrouchAttack.render(batch);
 
-        }
-        else if (isAttacking) {
+        if (isRenderingAttack) {
             knightAttack.render(batch);
-        } else if (isCrouched) {
+        } else if (isRenderingCrouch) {
             knightCrouch.render(batch);
-        } else if (isJumping) {
+        } else if (isRenderingJump) {
             knightJump.render(batch);
         } else {
             knightWalk.render(batch);
         }
+
+        font.draw(batch, "Knight Life: " + knightWalk.getVida(), 20, Gdx.graphics.getHeight() - 20);
+        font.draw(batch, "Witch Life: " + witch.getVida(), 20, Gdx.graphics.getHeight() - 40);
+
         for (Rana rana : listaRanas) {
             rana.render(batch);
         }
@@ -93,23 +96,13 @@ public class GameScreen implements Screen {
             waterBall.render(batch);
         }
         batch.end();
-        /*
-        // Verifica si ha pasado el tiempo para mostrar la tienda
-        if (elapsedTime >= TIENDA_INTERVAL) {
-            // Cambia a la pantalla de la tienda
-            ((MyGdxGame) Gdx.app.getApplicationListener()).changeScreen(MyGdxGame.TIENDA_SCREEN);
-            // Reinicia el temporizador
-            elapsedTime = 0;
-        }*/
     }
 
     private void update(float delta) {
-        elapsedTime += delta; // Actualiza elapsedTime
+        elapsedTime += delta;
         background.update(delta);
         witch.update(delta);
-
         knightWalk.update(delta);
-        // Actualiza el tiempo de cooldown de salto si está activo
 
         if (jumpCooldownActive) {
             jumpCooldownTimer -= delta;
@@ -185,25 +178,9 @@ public class GameScreen implements Screen {
             cacodaemonSpawnTimer = 0f;
         }
 
-        // Generar WaterBalls cuando se presiona la tecla 'T'
-        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            Vector2 waterballPosition = new Vector2(120, 750); // Ajusta la posición según necesites
-            WaterBall newWaterball = new WaterBall(waterballPosition);
-            listaWaterBalls.add(newWaterball);
-        }
-        for (Iterator<Cacodaemon> cacodaemonIterator = listaCacodaemon.iterator(); cacodaemonIterator.hasNext();) {
-            Cacodaemon cacodaemon = cacodaemonIterator.next();
-            for (Iterator<WaterBall> waterBallIterator = listaWaterBalls.iterator(); waterBallIterator.hasNext();) {
-                WaterBall waterBall = waterBallIterator.next();
-                if (cacodaemon.getBounds().overlaps(waterBall.getBounds())) {
-                    // Colisión detectada, realiza las acciones necesarias
-                    // Por ejemplo, eliminar la WaterBall y reducir la vida del Cacodaemon
-                    waterBallIterator.remove(); // Elimina la WaterBall
-                    cacodaemon.dispose(); // Reducción de la vida del Cacodaemon
-
-                }
-            }
-        }
+        isRenderingAttack = isAttacking;
+        isRenderingCrouch = isCrouched;
+        isRenderingJump = isJumping;
     }
 
     @Override
@@ -228,12 +205,16 @@ public class GameScreen implements Screen {
         knightAttack.dispose();
         knightCrouch.dispose();
         knightJump.dispose();
-        cacodaemon.dispose();
+
+        for (Cacodaemon cacodaemon: listaCacodaemon){
+            cacodaemon.dispose();
+        }
         for (Rana rana : listaRanas) {
             rana.dispose();
         }
         for (WaterBall waterBall : listaWaterBalls) {
             waterBall.dispose();
         }
+        font.dispose();
     }
 }
