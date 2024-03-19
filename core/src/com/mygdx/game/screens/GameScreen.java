@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.SocketManager;
 import com.mygdx.game.objects.WaterBall;
 import com.mygdx.game.screens.Background;
 import com.mygdx.game.objects.Knight;
@@ -113,14 +114,7 @@ public class GameScreen implements Screen {
             isCrouched = false;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
-            isAttacking = true;
-            knightAttack.resetAnimation();
-            for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext();) {
-                Rana rana = iterator.next();
-                if (knightAttack.getBounds().overlaps(rana.getBounds())) {
-                    rana.setVida(0);
-                }
-            }
+            knightAttack();
         }
         if (isAttacking) {
             knightAttack.update(delta);
@@ -160,6 +154,17 @@ public class GameScreen implements Screen {
         batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
     }
 
+    public void knightAttack(){
+        isAttacking = true;
+        knightAttack.resetAnimation();
+        for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext();) {
+            Rana rana = iterator.next();
+            if (knightAttack.getBounds().overlaps(rana.getBounds())) {
+                rana.setVida(0);
+            }
+        }
+        SocketManager.emitKnightAttack();
+    }
     @Override
     public void pause() {}
 

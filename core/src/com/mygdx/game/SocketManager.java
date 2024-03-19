@@ -10,6 +10,8 @@ import java.net.URISyntaxException;
 public class SocketManager {
     private static final String SERVER_URL = "http://localhost:3001"; // Cambia la dirección IP al servidor Node.js
     private static Socket socket;
+    private static String currentRoom;
+
 
     public static void connect() {
         try {
@@ -43,14 +45,28 @@ public class SocketManager {
 
     public static void createRoom(String roomName) {
         socket.emit("createRoom", roomName);
+        setCurrentRoom(roomName);
     }
 
     public static void joinRoom(String roomName) {
         socket.emit("joinRoom", roomName);
         socket.emit("message", "HOLAAAAAAAAA");
+        setCurrentRoom(roomName);
+
     }
 
+    public static void emitKnightAttack(){
+        socket.emit("knightAttack",getCurrentRoom());
+    }
     public static Socket getSocket() {
         return socket;
+    }
+
+    public static void setCurrentRoom(String roomName) {
+        currentRoom = roomName;
+    }
+
+    public static String getCurrentRoom() {
+        return currentRoom;
     }
 }
