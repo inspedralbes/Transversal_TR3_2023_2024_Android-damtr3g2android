@@ -17,7 +17,9 @@ public class StartScreen implements Screen {
     private Texture startScreenTexture;
     private BitmapFont font;
     private Rectangle startButton;
+    private Rectangle pauseButton; // Nuevo botón de pausa
     private Music backgroundMusic; // Variable para la música de fondo
+    private boolean isMusicPaused = false; // Variable para controlar el estado de la música
 
     public StartScreen(SpriteBatch batch) {
         this.batch = batch;
@@ -34,6 +36,13 @@ public class StartScreen implements Screen {
         float buttonX = (Gdx.graphics.getWidth() - buttonWidth) / 2;
         float buttonY = (Gdx.graphics.getHeight() - buttonHeight) / 2;
         startButton = new Rectangle(buttonX, buttonY, buttonWidth, buttonHeight);
+
+        // Define el área del botón de pausa centrado en la pantalla
+        float pauseButtonWidth = Gdx.graphics.getWidth() / 4;
+        float pauseButtonHeight = Gdx.graphics.getHeight() / 15;
+        float pauseButtonX = (Gdx.graphics.getWidth() - pauseButtonWidth) / 2;
+        float pauseButtonY = (Gdx.graphics.getHeight() - pauseButtonHeight) / 4;
+        pauseButton = new Rectangle(pauseButtonX, pauseButtonY, pauseButtonWidth, pauseButtonHeight);
 
         // Cargar la música de fondo
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music/dragon-ball.mp3"));
@@ -71,6 +80,9 @@ public class StartScreen implements Screen {
         // Dibuja el texto del botón de inicio
         font.draw(batch, "Start Game", startButton.x, startButton.y + startButton.height);
 
+        // Dibuja el texto del botón de pausa
+        font.draw(batch, isMusicPaused ? "Resume Music" : "Pause Music", pauseButton.x, pauseButton.y + pauseButton.height);
+
         batch.end();
 
         // Verifica si se hizo clic en el botón de inicio
@@ -84,6 +96,17 @@ public class StartScreen implements Screen {
                 // Si se hizo clic en el botón de inicio, cambia a la pantalla de juego
                 ((MyGdxGame) Gdx.app.getApplicationListener()).changeScreen(MyGdxGame.GAME_SCREEN);
             }
+
+            // Verifica si se hizo clic en el botón de pausa
+            if (pauseButton.contains(x, y)) {
+                // Si se hizo clic en el botón de pausa, pausa o reanuda la música
+                if (isMusicPaused) {
+                    backgroundMusic.play();
+                } else {
+                    backgroundMusic.pause();
+                }
+                isMusicPaused = !isMusicPaused;
+            }
         }
     }
 
@@ -95,6 +118,13 @@ public class StartScreen implements Screen {
         float buttonX = (width - buttonWidth) / 2;
         float buttonY = (height - buttonHeight) / 2;
         startButton.set(buttonX, buttonY, buttonWidth, buttonHeight);
+
+        // Reajusta el tamaño y la posición del botón de pausa al cambiar el tamaño de la ventana
+        float pauseButtonWidth = width / 4;
+        float pauseButtonHeight = height / 15;
+        float pauseButtonX = (width - pauseButtonWidth) / 2;
+        float pauseButtonY = (height - pauseButtonHeight) / 4;
+        pauseButton.set(pauseButtonX, pauseButtonY, pauseButtonWidth, pauseButtonHeight);
 
         // Actualiza el tamaño de la textura de fondo al cambiar el tamaño de la ventana
         startScreenTexture.dispose();
@@ -130,3 +160,4 @@ public class StartScreen implements Screen {
         backgroundMusic.dispose();
     }
 }
+

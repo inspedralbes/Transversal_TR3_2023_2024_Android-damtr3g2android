@@ -14,9 +14,9 @@ public class Cacodaemon {
     private Vector2 position;
     private Rectangle bounds;
 
-    private static final int FRAME_WIDTH = 64;
-    private static final int FRAME_HEIGHT = 64;
-    private static final int FRAMES_IN_ROW_WALK = 6;
+    private static final int FRAME_WIDTH = 62;
+    private static final int FRAME_HEIGHT = 72;
+    private static final int FRAMES_IN_ROW_WALK = 15;
     private static final int FRAMES_IN_ROW_DEATH = 4;
 
     private static final float FRAME_DURATION = 0.1f;
@@ -31,8 +31,8 @@ public class Cacodaemon {
     private float attackTimer;
 
     public Cacodaemon(Vector2 position, int health) {
-        Texture walkSpriteSheet = new Texture(Gdx.files.internal("Cacodaemon/Cacodaemon.png"));
-        Texture deathSpriteSheet = new Texture(Gdx.files.internal("Cacodaemon/CacodaemonDeath.png"));
+        Texture walkSpriteSheet = new Texture(Gdx.files.internal("MinionDragon/MinionDragon.png"));
+        Texture deathSpriteSheet = new Texture(Gdx.files.internal("MinionDragon/MinionDragonMuerte.png"));
 
         walkFrames = new TextureRegion[FRAMES_IN_ROW_WALK];
         deathFrames = new TextureRegion[FRAMES_IN_ROW_DEATH];
