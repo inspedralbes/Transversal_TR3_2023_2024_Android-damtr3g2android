@@ -160,10 +160,15 @@ public class GameScreen implements Screen {
         for (Rana rana : listaRanas) {
             rana.update(delta);
 
-            if (isCrouched && rana.isAttacking() && knightCrouch.getBounds().overlaps(rana.getBounds())){
+            if (isCrouched && rana.isAttacking() && rana.getDamageDealt() < 10 && knightCrouch.getBounds().overlaps(rana.getBounds())){
                 knightCrouch.setVida(knightCrouch.getVida() - 10);
-            } else if (!isCrouched && rana.isAttacking() && knightWalk.getBounds().overlaps(rana.getBounds())){
+                rana.addDamageDealt(10); // Actualizar el daño total infligido
+            } else if (!isCrouched && rana.isAttacking() && rana.getDamageDealt() < 10 && knightWalk.getBounds().overlaps(rana.getBounds())){
                 knightWalk.setVida(knightWalk.getVida() - 10);
+                rana.addDamageDealt(10); // Actualizar el daño total infligido
+            }
+            if (rana.isAnimationFinished()) {
+                rana.resetDamageDealt();
             }
         }
 

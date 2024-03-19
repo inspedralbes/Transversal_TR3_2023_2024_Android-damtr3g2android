@@ -114,7 +114,21 @@ public class Rana {
         return isAttacking;
     }
 
-    
+    public void resetDamageDealt() {
+        damageDealt = 0;
+    }
+
+    public void addDamageDealt(int damage) {
+        damageDealt += damage;
+    }
+
+    public int getDamageDealt() {
+        return damageDealt;
+    }
+
+    public boolean isAnimationFinished() {
+        return !isAttacking;
+    }
 
     public void render(SpriteBatch batch) {
         if (!isDisposed) {
