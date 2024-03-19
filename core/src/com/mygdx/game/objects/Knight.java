@@ -24,7 +24,7 @@ public class Knight {
 
     private float stateTime;
 
-    public Knight(Vector2 position, int fila, int columna, boolean agachar,  int vidaInicial) {
+    public Knight(Vector2 position, int fila, int columna, boolean agachar, int vidaInicial) {
         Texture spriteSheet = new Texture(Gdx.files.internal("Fire_Warrior-Sheet.png"));
 
         int initialFrame = agachar ? 1 : 0; // Si agachar es true, omitir la primera posición

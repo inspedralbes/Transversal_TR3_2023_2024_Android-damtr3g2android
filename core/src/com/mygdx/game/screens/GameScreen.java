@@ -159,7 +159,14 @@ public class GameScreen implements Screen {
         }
         for (Rana rana : listaRanas) {
             rana.update(delta);
+
+            if (isCrouched && rana.isAttacking() && knightCrouch.getBounds().overlaps(rana.getBounds())){
+                knightCrouch.setVida(knightCrouch.getVida() - 10);
+            } else if (!isCrouched && rana.isAttacking() && knightWalk.getBounds().overlaps(rana.getBounds())){
+                knightWalk.setVida(knightWalk.getVida() - 10);
+            }
         }
+
         for (Cacodaemon cacodaemon : listaCacodaemon) {
             cacodaemon.update(delta);
         }

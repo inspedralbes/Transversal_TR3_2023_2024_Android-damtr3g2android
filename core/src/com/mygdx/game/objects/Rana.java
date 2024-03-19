@@ -33,6 +33,7 @@ public class Rana {
     private boolean isAttacking;
     private boolean isDead;
     private float attackTimer;
+    private int damageDealt;
 
     public Rana(Vector2 position, int vida) {
         Texture WalkSpriteSheet = new Texture(Gdx.files.internal("Rana/Toad_Walk.png"));
@@ -64,6 +65,7 @@ public class Rana {
         this.isAttacking = false;
         this.isDead = false;
         this.attackTimer = 0f;
+        damageDealt =0;
     }
 
     public void update(float delta) {
@@ -108,6 +110,11 @@ public class Rana {
         }
     }
 
+    public boolean isAttacking() {
+        return isAttacking;
+    }
+
+    
 
     public void render(SpriteBatch batch) {
         if (!isDisposed) {
