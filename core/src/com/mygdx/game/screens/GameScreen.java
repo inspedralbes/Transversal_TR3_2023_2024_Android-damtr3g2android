@@ -215,12 +215,17 @@ public class GameScreen implements Screen {
         knightAttack.dispose();
         knightCrouch.dispose();
         knightJump.dispose();
-        cacodaemon.dispose();
         for (Rana rana : listaRanas) {
             rana.dispose();
         }
         for (WaterBall waterBall : listaWaterBalls) {
             waterBall.dispose();
         }
+        listaWaterBalls.clear(); // Limpiar la lista de WaterBalls
+        for (Cacodaemon cacodaemon : listaCacodaemon) {
+            cacodaemon.dispose();
+        }
+        listaCacodaemon.clear(); // Limpiar la lista de Cacodaemons
     }
+
 }
