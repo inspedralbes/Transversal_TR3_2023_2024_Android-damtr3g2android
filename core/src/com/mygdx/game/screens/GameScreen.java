@@ -54,7 +54,8 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void show() {SocketManager.addKnightAttackListener(this);}
+    public void show() {SocketManager.addKnightAttackListener(this);
+    SocketManager.addKnightCrouch(this);}
 
     @Override
     public void render(float delta) {
@@ -100,7 +101,8 @@ public class GameScreen implements Screen {
             }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            isCrouched = true;
+            knightCrouch();
+            SocketManager.emitKnightCrouch();
             if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
                 isAttacking = true;
                 for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext();) {
@@ -165,6 +167,10 @@ public class GameScreen implements Screen {
             }
         }
 
+    }
+
+    public void knightCrouch(){
+        isCrouched = true;
     }
     @Override
     public void pause() {}

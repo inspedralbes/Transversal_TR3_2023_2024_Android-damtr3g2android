@@ -61,11 +61,29 @@ public class SocketManager {
 
     }
 
+    public static void emitKnightCrouch(){
+        socket.emit("knightCrouch", getCurrentRoom());
+
+    }
+
     public static void addKnightAttackListener(GameScreen gameScreen){
         socket.on("knightAttacking", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 gameScreen.knightAttack();
+                // Aquí maneja la respuesta del servidor
+                // Por ejemplo, puedes imprimir la respuesta en la consola
+                System.out.println("Respuesta del servidor: ");
+                // También puedes hacer otras operaciones según la respuesta del servidor
+            }
+        });
+    }
+
+    public static void addKnightCrouch(GameScreen gameScreen){
+        socket.on("knightCrouching", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                gameScreen.knightCrouch();
                 // Aquí maneja la respuesta del servidor
                 // Por ejemplo, puedes imprimir la respuesta en la consola
                 System.out.println("Respuesta del servidor: ");
