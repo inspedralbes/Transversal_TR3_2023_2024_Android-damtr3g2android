@@ -56,7 +56,16 @@ public class SocketManager {
     }
 
     public static void emitKnightAttack(){
-        socket.emit("knightAttack",getCurrentRoom());
+        socket.emit("knightAttack", getCurrentRoom());
+        socket.on("knightAttacking", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                // Aquí maneja la respuesta del servidor
+                // Por ejemplo, puedes imprimir la respuesta en la consola
+                System.out.println("Respuesta del servidor: ");
+                // También puedes hacer otras operaciones según la respuesta del servidor
+            }
+        });
     }
     public static Socket getSocket() {
         return socket;

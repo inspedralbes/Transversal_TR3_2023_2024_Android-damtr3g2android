@@ -115,6 +115,7 @@ public class GameScreen implements Screen {
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
             knightAttack();
+            SocketManager.emitKnightAttack();
         }
         if (isAttacking) {
             knightAttack.update(delta);
@@ -163,7 +164,7 @@ public class GameScreen implements Screen {
                 rana.setVida(0);
             }
         }
-        SocketManager.emitKnightAttack();
+
     }
     @Override
     public void pause() {}
