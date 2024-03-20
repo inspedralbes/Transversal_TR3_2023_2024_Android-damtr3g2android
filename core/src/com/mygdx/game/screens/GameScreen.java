@@ -53,9 +53,11 @@ public class GameScreen implements Screen {
 
     }
 
-    @Override
-    public void show() {SocketManager.addKnightAttackListener(this);
-    SocketManager.addKnightCrouch(this);}
+    public void show() {
+        SocketManager.addKnightAttackListener(this);
+        SocketManager.addKnightJumpListener(this);
+        SocketManager.addKnightCrouch(this);
+    }
 
     @Override
     public void render(float delta) {
@@ -126,10 +128,8 @@ public class GameScreen implements Screen {
             }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.W) && !isJumping && !jumpCooldownActive) {
-            isJumping = true;
-            knightJump.resetAnimation();
-            jumpCooldownActive = true;
-            jumpCooldownTimer = JUMP_COOLDOWN_DURATION;
+            knightJump();
+            SocketManager.emitKnightJump();
         }
         if (isJumping) {
             knightJump.updateSalto(delta);
@@ -171,6 +171,12 @@ public class GameScreen implements Screen {
 
     public void knightCrouch(){
         isCrouched = true;
+    }
+    public void knightJump(){
+        isJumping = true;
+        knightJump.resetAnimation();
+        jumpCooldownActive = true;
+        jumpCooldownTimer = JUMP_COOLDOWN_DURATION;
     }
     @Override
     public void pause() {}
