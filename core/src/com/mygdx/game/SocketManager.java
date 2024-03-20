@@ -57,6 +57,10 @@ public class SocketManager {
 
     public static void emitKnightAttack(){
         socket.emit("knightAttack", getCurrentRoom());
+
+    }
+
+    public static void addKnightAttackListener(){
         socket.on("knightAttacking", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
