@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.mygdx.game.screens.GameScreen;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -60,10 +61,11 @@ public class SocketManager {
 
     }
 
-    public static void addKnightAttackListener(){
+    public static void addKnightAttackListener(GameScreen gameScreen){
         socket.on("knightAttacking", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                gameScreen.knightAttack();
                 // Aquí maneja la respuesta del servidor
                 // Por ejemplo, puedes imprimir la respuesta en la consola
                 System.out.println("Respuesta del servidor: ");

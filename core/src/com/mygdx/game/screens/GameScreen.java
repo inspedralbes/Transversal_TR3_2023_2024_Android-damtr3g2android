@@ -54,7 +54,7 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void show() {SocketManager.addKnightAttackListener();}
+    public void show() {SocketManager.addKnightAttackListener(this);}
 
     @Override
     public void render(float delta) {
