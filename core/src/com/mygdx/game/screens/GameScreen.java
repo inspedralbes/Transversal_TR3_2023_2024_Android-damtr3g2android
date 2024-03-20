@@ -76,6 +76,7 @@ public class GameScreen implements Screen {
             knightAttack.render(batch);
         } else if (isCrouched) {
             knightCrouch.render(batch);
+            isCrouched = false;
         } else if (isJumping) {
             knightJump.render(batch);
         } else {
@@ -114,8 +115,6 @@ public class GameScreen implements Screen {
                     }
                 }
             }
-        } else {
-            isCrouched = false;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
             knightAttack();
