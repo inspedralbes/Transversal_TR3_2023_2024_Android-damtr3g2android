@@ -44,16 +44,19 @@ public class GameScreen implements Screen {
     private boolean isRenderingCrouch = false;
     private boolean isRenderingJump = false;
 
+    private boolean knightDead = false;
+    private static final String DEATH_MESSAGE = "Has muerto. Presiona cualquier tecla para reiniciar.";
+
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
         background = new Background();
         witch = new Witch(new Vector2(0, 700), 100);
 
-        knightWalk = new Knight(new Vector2(-150, 0), 2, 8,false, 100);
-        knightAttack = new Knight(new Vector2(0, 0), 9, 5,false, 100);
-        knightCrouch = new Knight(new Vector2(-150, 0), 15, 4,true, 100);
-        knightJump = new Knight(new Vector2(-150, 200), 22, 5,false, 100);
-        knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5,false, 100);
+        knightWalk = new Knight(new Vector2(-150, 0), 2, 8, false, 100);
+        knightAttack = new Knight(new Vector2(0, 0), 9, 5, false, 100);
+        knightCrouch = new Knight(new Vector2(-150, 0), 15, 4, true, 100);
+        knightJump = new Knight(new Vector2(-150, 200), 22, 5, false, 100);
+        knightCrouchAttack = new Knight(new Vector2(0, 0), 16, 5, false, 100);
         listaRanas = new ArrayList<>();
         listaCacodaemon = new ArrayList<>();
         listaWaterBalls = new ArrayList<>();
@@ -61,10 +64,16 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void show() {}
+    public void show() {
+    }
 
     @Override
     public void render(float delta) {
+        if (knightDead) {
+            renderDeathMessage();
+            return;
+        }
+
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -89,7 +98,7 @@ public class GameScreen implements Screen {
             rana.render(batch);
         }
 
-        for(Cacodaemon cacodaemon :listaCacodaemon){
+        for (Cacodaemon cacodaemon : listaCacodaemon) {
             cacodaemon.render(batch);
         }
         for (WaterBall waterBall : listaWaterBalls) {
@@ -114,7 +123,7 @@ public class GameScreen implements Screen {
             isCrouched = true;
             if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
                 isAttacking = true;
-                for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext();) {
+                for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext(); ) {
                     Rana rana = iterator.next();
                     if (knightCrouchAttack.getBounds().overlaps(rana.getBounds())) {
                         rana.setVida(0);
@@ -127,7 +136,7 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
             isAttacking = true;
             knightAttack.resetAnimation();
-            for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext();) {
+            for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext(); ) {
                 Rana rana = iterator.next();
                 if (knightAttack.getBounds().overlaps(rana.getBounds())) {
                     rana.setVida(0);
@@ -160,10 +169,10 @@ public class GameScreen implements Screen {
         for (Rana rana : listaRanas) {
             rana.update(delta);
 
-            if (isCrouched && rana.isAttacking() && rana.getDamageDealt() < 10 && knightCrouch.getBounds().overlaps(rana.getBounds())){
+            if (isCrouched && rana.isAttacking() && rana.getDamageDealt() < 10 && knightCrouch.getBounds().overlaps(rana.getBounds())) {
                 knightCrouch.setVida(knightCrouch.getVida() - 10);
                 rana.addDamageDealt(10); // Actualizar el daño total infligido
-            } else if (!isCrouched && rana.isAttacking() && rana.getDamageDealt() < 10 && knightWalk.getBounds().overlaps(rana.getBounds())){
+            } else if (!isCrouched && rana.isAttacking() && rana.getDamageDealt() < 10 && knightWalk.getBounds().overlaps(rana.getBounds())) {
                 knightWalk.setVida(knightWalk.getVida() - 10);
                 rana.addDamageDealt(10); // Actualizar el daño total infligido
             }
@@ -186,13 +195,24 @@ public class GameScreen implements Screen {
 
         cacodaemonSpawnTimer += delta;
         if (cacodaemonSpawnTimer >= CACODAEMON_SPAWN_TIMER) {
-            listaCacodaemon.add(new Cacodaemon(new Vector2(300,700),100));
+            listaCacodaemon.add(new Cacodaemon(new Vector2(300, 700), 100));
             cacodaemonSpawnTimer = 0f;
         }
 
         isRenderingAttack = isAttacking;
         isRenderingCrouch = isCrouched;
         isRenderingJump = isJumping;
+
+        // Verificar si la vida del Knight llega a 0
+        if (knightWalk.getVida() <= 0) {
+            knightDead = true;
+        }
+    }
+
+    private void renderDeathMessage() {
+        batch.begin();
+        font.draw(batch, DEATH_MESSAGE, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() / 2);
+        batch.end();
     }
 
     @Override
@@ -201,13 +221,16 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 
     @Override
     public void dispose() {
@@ -218,7 +241,7 @@ public class GameScreen implements Screen {
         knightCrouch.dispose();
         knightJump.dispose();
 
-        for (Cacodaemon cacodaemon: listaCacodaemon){
+        for (Cacodaemon cacodaemon : listaCacodaemon) {
             cacodaemon.dispose();
         }
         for (Rana rana : listaRanas) {
