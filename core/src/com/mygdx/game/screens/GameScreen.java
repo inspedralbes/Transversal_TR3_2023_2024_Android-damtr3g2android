@@ -7,15 +7,24 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.objects.Cacodaemon;
+import com.mygdx.game.SocketManager;
 import com.mygdx.game.objects.WaterBall;
 import com.mygdx.game.screens.Background;
 import com.mygdx.game.objects.Knight;
 import com.mygdx.game.objects.Rana;
 import com.mygdx.game.objects.Witch;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class GameScreen implements Screen {
     private final SpriteBatch batch;
@@ -54,8 +63,11 @@ public class GameScreen implements Screen {
         listaWaterBalls = new ArrayList<>();
     }
 
-    @Override
-    public void show() {}
+    public void show() {
+        SocketManager.addKnightAttackListener(this);
+        SocketManager.addKnightJumpListener(this);
+        SocketManager.addKnightCrouch(this);
+    }
 
     @Override
     public void render(float delta) {
@@ -73,6 +85,7 @@ public class GameScreen implements Screen {
             knightAttack.render(batch);
         } else if (isCrouched) {
             knightCrouch.render(batch);
+            isCrouched = false;
         } else if (isJumping) {
             knightJump.render(batch);
         } else {
@@ -105,7 +118,8 @@ public class GameScreen implements Screen {
             }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            isCrouched = true;
+            knightCrouch();
+            SocketManager.emitKnightCrouch();
             if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
                 isAttacking = true;
                 for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext();) {
@@ -115,18 +129,10 @@ public class GameScreen implements Screen {
                     }
                 }
             }
-        } else {
-            isCrouched = false;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
-            isAttacking = true;
-            knightAttack.resetAnimation();
-            for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext();) {
-                Rana rana = iterator.next();
-                if (knightAttack.getBounds().overlaps(rana.getBounds())) {
-                    rana.setVida(0);
-                }
-            }
+            knightAttack();
+            SocketManager.emitKnightAttack();
         }
         if (isAttacking) {
             knightAttack.update(delta);
@@ -135,10 +141,8 @@ public class GameScreen implements Screen {
             }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.W) && !isJumping && !jumpCooldownActive) {
-            isJumping = true;
-            knightJump.resetAnimation();
-            jumpCooldownActive = true;
-            jumpCooldownTimer = JUMP_COOLDOWN_DURATION;
+            knightJump();
+            SocketManager.emitKnightJump();
         }
         if (isJumping) {
             knightJump.updateSalto(delta);
@@ -198,6 +202,27 @@ public class GameScreen implements Screen {
         batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
     }
 
+    public void knightAttack(){
+        isAttacking = true;
+        knightAttack.resetAnimation();
+        for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext();) {
+            Rana rana = iterator.next();
+            if (knightAttack.getBounds().overlaps(rana.getBounds())) {
+                rana.setVida(0);
+            }
+        }
+
+    }
+
+    public void knightCrouch(){
+        isCrouched = true;
+    }
+    public void knightJump(){
+        isJumping = true;
+        knightJump.resetAnimation();
+        jumpCooldownActive = true;
+        jumpCooldownTimer = JUMP_COOLDOWN_DURATION;
+    }
     @Override
     public void pause() {}
 
@@ -215,6 +240,7 @@ public class GameScreen implements Screen {
         knightAttack.dispose();
         knightCrouch.dispose();
         knightJump.dispose();
+
         for (Rana rana : listaRanas) {
             rana.dispose();
         }
