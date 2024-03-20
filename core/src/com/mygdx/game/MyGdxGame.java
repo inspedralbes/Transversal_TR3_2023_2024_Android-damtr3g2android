@@ -45,4 +45,14 @@ public class MyGdxGame extends Game {
 		}
 		setScreen(newScreen);
 	}
+
+	public GameScreen getGameScreen() {
+		Screen currentScreen = getScreen();
+		if (currentScreen instanceof GameScreen) {
+			return (GameScreen) currentScreen;
+		} else {
+			return null; // Manejar el caso en el que la pantalla actual no es GameScreen
+		}
+	}
+
 }

@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.mygdx.game.screens.GameScreen;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -42,6 +43,23 @@ public class SocketManager {
             }
         });
     }
+
+    public static void addKnightAttackListener() {
+        socket.on("knightAttacking", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Obtener la instancia de GameScreen y llamar a knightAttack
+                        GameScreen gameScreen = ((MyGdxGame) Gdx.app.getApplicationListener()).getGameScreen();
+                        gameScreen.knightAttack();
+                    }
+                });
+            }
+        });
+    }
+
 
     public static void createRoom(String roomName) {
         socket.emit("createRoom", roomName);
