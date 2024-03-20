@@ -1,8 +1,6 @@
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,14 +9,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.MyGdxGame;
 
-public class TiendaScreen implements Screen {
+public class TiendainGameScreen implements Screen {
     private final SpriteBatch batch;
     private Texture backgroundTexture; // Texture para el fondo de pantalla
     private BitmapFont font;
     private Rectangle[] buttons;
     private String userInput = ""; // Para almacenar la entrada de texto
 
-    public TiendaScreen(SpriteBatch batch) {
+    public TiendainGameScreen(SpriteBatch batch) {
         this.batch = batch;
 
         // Cargar la imagen de fondo desde la carpeta de assets
