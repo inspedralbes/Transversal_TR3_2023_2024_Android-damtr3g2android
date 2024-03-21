@@ -46,7 +46,7 @@ public class GameScreen implements Screen {
     private static final float CACODAEMON_SPAWN_TIMER = 10f;
 
     private static final float RANA_SPAWN_INTERVAL = 10f;
-
+    private static boolean player1;
 
 
     public GameScreen(SpriteBatch batch) {
@@ -62,6 +62,7 @@ public class GameScreen implements Screen {
         listaRanas = new ArrayList<>();
         listaCacodaemon = new ArrayList<>();
         listaWaterBalls = new ArrayList<>();
+        player1= SocketManager.getCurrentRol();
     }
 
     public void show() {
@@ -112,6 +113,34 @@ public class GameScreen implements Screen {
 
         knightWalk.update(delta);
         // Actualiza el tiempo de cooldown de salto si está activo
+        if(player1==false){
+            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                knightCrouch();
+                SocketManager.emitKnightCrouch();
+                if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
+                    isAttacking = true;
+                    for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext();) {
+                        Rana rana = iterator.next();
+                        if (knightCrouchAttack.getBounds().overlaps(rana.getBounds())) {
+                            rana.setVida(0);
+                        }
+                    }
+                }
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
+                knightAttack();
+                SocketManager.emitKnightAttack();
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.W) && !isJumping && !jumpCooldownActive) {
+                knightJump();
+                SocketManager.emitKnightJump();
+            }
+        }else if(player1==true){
+            if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+                witchWaterBall();
+                SocketManager.emitWitchBall();
+            }
+        }
 
         if (jumpCooldownActive) {
             jumpCooldownTimer -= delta;
@@ -119,33 +148,14 @@ public class GameScreen implements Screen {
                 jumpCooldownActive = false;
             }
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            knightCrouch();
-            SocketManager.emitKnightCrouch();
-            if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
-                isAttacking = true;
-                for (Iterator<Rana> iterator = listaRanas.iterator(); iterator.hasNext();) {
-                    Rana rana = iterator.next();
-                    if (knightCrouchAttack.getBounds().overlaps(rana.getBounds())) {
-                        rana.setVida(0);
-                    }
-                }
-            }
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.A) && !isAttacking) {
-            knightAttack();
-            SocketManager.emitKnightAttack();
-        }
+
         if (isAttacking) {
             knightAttack.update(delta);
             if (knightAttack.isAnimationFinished()) {
                 isAttacking = false;
             }
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.W) && !isJumping && !jumpCooldownActive) {
-            knightJump();
-            SocketManager.emitKnightJump();
-        }
+
         if (isJumping) {
             knightJump.updateSalto(delta);
             if (knightJump.isAnimationFinished()) {
@@ -179,10 +189,7 @@ public class GameScreen implements Screen {
         }
 
         // Generar WaterBalls cuando se presiona la tecla 'T'
-        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            witchWaterBall();
-            SocketManager.emitWitchBall();
-        }
+
         for (Iterator<Cacodaemon> cacodaemonIterator = listaCacodaemon.iterator(); cacodaemonIterator.hasNext();) {
             Cacodaemon cacodaemon = cacodaemonIterator.next();
             for (Iterator<WaterBall> waterBallIterator = listaWaterBalls.iterator(); waterBallIterator.hasNext();) {

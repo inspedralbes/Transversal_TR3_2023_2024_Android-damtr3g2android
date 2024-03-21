@@ -13,7 +13,7 @@ public class SocketManager {
     private static Socket socket;
     private static String currentRoom;
 
-
+    private static boolean player1;
     public static void connect() {
         try {
             socket = IO.socket(SERVER_URL);
@@ -47,13 +47,27 @@ public class SocketManager {
     public static void createRoom(String roomName) {
         socket.emit("createRoom", roomName);
         setCurrentRoom(roomName);
+        setCurrentRol("knight");
     }
 
     public static void joinRoom(String roomName) {
         socket.emit("joinRoom", roomName);
         socket.emit("message", "HOLAAAAAAAAA");
         setCurrentRoom(roomName);
+        setCurrentRol("witch");
 
+    }
+
+    public static void setCurrentRol(String rol){
+        if(rol=="knight"){
+            player1=true;
+        }else if(rol=="witch"){
+            player1=false;
+        }
+    }
+
+    public static boolean getCurrentRol(){
+        return player1;
     }
 
     public static void emitKnightAttack(){
