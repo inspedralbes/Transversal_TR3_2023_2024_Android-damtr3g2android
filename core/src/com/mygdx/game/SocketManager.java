@@ -76,7 +76,8 @@ public class SocketManager {
         socket.on("witchWaterBalling", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                gameScreen.knightAttack();
+
+                gameScreen.witchWaterBall();
                 // Aquí maneja la respuesta del servidor
                 // Por ejemplo, puedes imprimir la respuesta en la consola
                 System.out.println("Respuesta del servidor: ");
@@ -102,7 +103,7 @@ public class SocketManager {
             @Override
             public void call(Object... args) {
                 gameScreen.knightCrouch();
-                 // Aquí maneja la respuesta del servidor
+                // Aquí maneja la respuesta del servidor
                 // Por ejemplo, puedes imprimir la respuesta en la consola
                 System.out.println("Respuesta del servidor: ");
                 // También puedes hacer otras operaciones según la respuesta del servidor

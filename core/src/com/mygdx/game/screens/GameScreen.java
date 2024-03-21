@@ -47,6 +47,8 @@ public class GameScreen implements Screen {
 
     private static final float RANA_SPAWN_INTERVAL = 10f;
 
+    Vector2 waterballPosition = new Vector2(120, 750); // Ajusta la posición según necesites
+    WaterBall newWaterball = new WaterBall(waterballPosition);
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
@@ -179,9 +181,7 @@ public class GameScreen implements Screen {
 
         // Generar WaterBalls cuando se presiona la tecla 'T'
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            Vector2 waterballPosition = new Vector2(120, 750); // Ajusta la posición según necesites
-            WaterBall newWaterball = new WaterBall(waterballPosition);
-            listaWaterBalls.add(newWaterball);
+            witchWaterBall();
             SocketManager.emitWitchBall();
         }
         for (Iterator<Cacodaemon> cacodaemonIterator = listaCacodaemon.iterator(); cacodaemonIterator.hasNext();) {
@@ -215,7 +215,10 @@ public class GameScreen implements Screen {
         }
 
     }
+    public void witchWaterBall(){
 
+        listaWaterBalls.add(newWaterball);
+    }
     public void knightCrouch(){
         isCrouched = true;
     }
