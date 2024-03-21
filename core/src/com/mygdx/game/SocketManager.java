@@ -1,7 +1,11 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.objects.WaterBall;
 import com.mygdx.game.screens.GameScreen;
+
+import org.json.JSONObject;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -13,7 +17,7 @@ public class SocketManager {
     private static Socket socket;
     private static String currentRoom;
 
-
+    private static WaterBall waterball;
     public static void connect() {
         try {
             socket = IO.socket(SERVER_URL);
@@ -69,19 +73,16 @@ public class SocketManager {
     }
 
     public static void emitWitchBall(){
-        socket.emit("witchWaterBall",getCurrentRoom());
+        socket.emit("witchWaterBall", getCurrentRoom());
     }
 
     public static void addWitchWaterBallListener(GameScreen gameScreen){
         socket.on("witchWaterBalling", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-
-                gameScreen.witchWaterBall();
-                // Aquí maneja la respuesta del servidor
-                // Por ejemplo, puedes imprimir la respuesta en la consola
-                System.out.println("Respuesta del servidor: ");
-                // También puedes hacer otras operaciones según la respuesta del servidor
+                waterball = new WaterBall(new Vector2(120, 750));
+                gameScreen.witchWaterBall(waterball);
+                System.out.println("Respuesta del servidor: " + args[0]);
             }
         });
     }
