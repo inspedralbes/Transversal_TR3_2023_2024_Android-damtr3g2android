@@ -67,6 +67,7 @@ public class GameScreen implements Screen {
         SocketManager.addKnightAttackListener(this);
         SocketManager.addKnightJumpListener(this);
         SocketManager.addKnightCrouch(this);
+        SocketManager.addWitchWaterBallListener(this);
     }
 
     @Override
@@ -181,6 +182,7 @@ public class GameScreen implements Screen {
             Vector2 waterballPosition = new Vector2(120, 750); // Ajusta la posición según necesites
             WaterBall newWaterball = new WaterBall(waterballPosition);
             listaWaterBalls.add(newWaterball);
+            SocketManager.emitWitchBall();
         }
         for (Iterator<Cacodaemon> cacodaemonIterator = listaCacodaemon.iterator(); cacodaemonIterator.hasNext();) {
             Cacodaemon cacodaemon = cacodaemonIterator.next();
