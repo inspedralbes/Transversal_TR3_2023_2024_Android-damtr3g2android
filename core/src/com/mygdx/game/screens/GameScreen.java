@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.objects.Cacodaemon;
 import com.mygdx.game.SocketManager;
 import com.mygdx.game.objects.WaterBall;
@@ -47,6 +48,8 @@ public class GameScreen implements Screen {
 
     private static final float RANA_SPAWN_INTERVAL = 10f;
 
+    private int numRonda;
+
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
@@ -64,6 +67,12 @@ public class GameScreen implements Screen {
     }
 
     public void show() {
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                System.out.println("Hola");
+            }
+        }, 0, 2);
         SocketManager.addKnightAttackListener(this);
         SocketManager.addKnightJumpListener(this);
         SocketManager.addKnightCrouch(this);
@@ -72,6 +81,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
