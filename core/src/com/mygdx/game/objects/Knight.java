@@ -13,6 +13,7 @@ public class Knight {
     private int totalFrames;
     private Vector2 position;
     private Rectangle bounds;
+    private int vida;
 
     private static final int SPRITESHEET_COLS = 16;
     private static final int SPRITESHEET_ROWS = 25;
@@ -23,7 +24,7 @@ public class Knight {
 
     private float stateTime;
 
-    public Knight(Vector2 position, int fila, int columna, boolean agachar) {
+    public Knight(Vector2 position, int fila, int columna, boolean agachar, int vidaInicial) {
         Texture spriteSheet = new Texture(Gdx.files.internal("Fire_Warrior-Sheet.png"));
 
         int initialFrame = agachar ? 1 : 0; // Si agachar es true, omitir la primera posición
@@ -39,12 +40,19 @@ public class Knight {
             frames[j - initialFrame] = new TextureRegion(spriteSheet, j * frameWidth, rowIndex * frameHeight, frameWidth, frameHeight);
         }
 
+        this.vida = vidaInicial;
         this.position = position;
         this.bounds = new Rectangle(position.x, position.y, frameWidth, frameHeight);
         this.totalFrames = columna - initialFrame; // Ajustar el número total de frames
     }
 
+    public int getVida() {
+        return vida;
+    }
 
+    public void setVida(int vida) {
+        this.vida = vida;
+    }
 
     public void update(float delta) {
         stateTime += delta;

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.audio.Music; // Importar la clase Music de LibGDX
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -23,6 +24,10 @@ public class StartScreen implements Screen {
     private Texture startScreenTexture;
     private BitmapFont font;
     private Rectangle startButton;
+    private Rectangle pauseButton; // Botón de pausa
+    private Rectangle tiendaButton; // Nuevo botón
+    private Music backgroundMusic; // Variable para la música de fondo
+    private boolean isMusicPaused = false; // Variable para controlar el estado de la música
     private Rectangle createRoomButton;
     private Rectangle joinRoomButton;
     private String inputText = "";
@@ -39,6 +44,26 @@ public class StartScreen implements Screen {
         float buttonHeight = Gdx.graphics.getHeight() / 15;
         float buttonX = (Gdx.graphics.getWidth() - buttonWidth) / 2;
         float buttonY = (Gdx.graphics.getHeight() - buttonHeight) / 2;
+        startButton = new Rectangle(buttonX, buttonY, buttonWidth, buttonHeight);
+
+        // Define el área del botón de pausa centrado en la pantalla
+        float pauseButtonWidth = Gdx.graphics.getWidth() / 4;
+        float pauseButtonHeight = Gdx.graphics.getHeight() / 15;
+        float pauseButtonX = (Gdx.graphics.getWidth() - pauseButtonWidth) / 2;
+        float pauseButtonY = (Gdx.graphics.getHeight() - pauseButtonHeight) / 4;
+        pauseButton = new Rectangle(pauseButtonX, pauseButtonY, pauseButtonWidth, pauseButtonHeight);
+
+        // Define el área del nuevo botón debajo del botón de pausa
+        float tiendaButtonWidth = Gdx.graphics.getWidth() / 4;
+        float tiendaButtonHeight = Gdx.graphics.getHeight() / 15;
+        float tiendaButtonX = (Gdx.graphics.getWidth() - tiendaButtonWidth) / 2;
+        float tiendaButtonY = (Gdx.graphics.getHeight() - tiendaButtonHeight) / 3;
+        tiendaButton = new Rectangle(tiendaButtonX, tiendaButtonY, tiendaButtonWidth, tiendaButtonHeight);
+
+        // Cargar la música de fondo
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music/dragon-ball.mp3"));
+        backgroundMusic.setLooping(true); // Para reproducir la música en bucle
+        backgroundMusic.play(); // Comenzar a reproducir la música
         startButton = new Rectangle(buttonX, buttonY + 100, buttonWidth, buttonHeight);
         createRoomButton = new Rectangle(buttonX, buttonY - 50, buttonWidth, buttonHeight);
         joinRoomButton = new Rectangle(buttonX, buttonY - 200, buttonWidth, buttonHeight);
@@ -113,6 +138,13 @@ public class StartScreen implements Screen {
         batch.begin();
         batch.draw(startScreenTexture, 0, 0);
         font.draw(batch, "Start Game", startButton.x, startButton.y + startButton.height);
+
+        // Dibuja el texto del botón de pausa
+        font.draw(batch, isMusicPaused ? "Resume Music" : "Pause Music", pauseButton.x, pauseButton.y + pauseButton.height);
+
+        // Dibuja el texto del nuevo botón
+        font.draw(batch, "Tienda", tiendaButton.x, tiendaButton.y + tiendaButton.height);
+
         font.draw(batch, "Create Room", createRoomButton.x, createRoomButton.y + createRoomButton.height);
         font.draw(batch, "Join Room", joinRoomButton.x, joinRoomButton.y + joinRoomButton.height);
         batch.end();
@@ -131,6 +163,22 @@ public class StartScreen implements Screen {
             } else if (joinRoomButton.contains(x, y)) {
                 SocketManager.joinRoom(inputText);
             }
+
+            // Verifica si se hizo clic en el botón de pausa
+            if (pauseButton.contains(x, y)) {
+                // Si se hizo clic en el botón de pausa, pausa o reanuda la música
+                if (isMusicPaused) {
+                    backgroundMusic.play();
+                } else {
+                    backgroundMusic.pause();
+                }
+                isMusicPaused = !isMusicPaused;
+            }
+
+            // Verifica si se hizo clic en el nuevo botón
+            if (tiendaButton.contains(x, y)) {
+                ((MyGdxGame) Gdx.app.getApplicationListener()).changeScreen(MyGdxGame.GAME_SHOP);
+            }
         }
     }
 
@@ -144,6 +192,21 @@ public class StartScreen implements Screen {
         createRoomButton.set(buttonX, buttonY - 50, buttonWidth, buttonHeight);
         joinRoomButton.set(buttonX, buttonY - 200, buttonWidth, buttonHeight);
 
+        // Reajusta el tamaño y la posición del botón de pausa al cambiar el tamaño de la ventana
+        float pauseButtonWidth = width / 4;
+        float pauseButtonHeight = height / 15;
+        float pauseButtonX = (width - pauseButtonWidth) / 2;
+        float pauseButtonY = (height - pauseButtonHeight) / 4;
+        pauseButton.set(pauseButtonX, pauseButtonY, pauseButtonWidth, pauseButtonHeight);
+
+        // Reajusta el tamaño y la posición del nuevo botón debajo del botón de pausa
+        float extraButtonWidth = width / 4;
+        float extraButtonHeight = height / 15;
+        float extraButtonX = (width - extraButtonWidth) / 2;
+        float extraButtonY = (height - extraButtonHeight) / 6;
+        tiendaButton.set(extraButtonX, extraButtonY, extraButtonWidth, extraButtonHeight);
+
+        // Actualiza el tamaño de la textura de fondo al cambiar el tamaño de la ventana
         startScreenTexture.dispose();
         createStartScreenTexture();
 
@@ -160,11 +223,16 @@ public class StartScreen implements Screen {
 
     @Override
     public void hide() {
+        backgroundMusic.stop();
+        backgroundMusic.dispose();
     }
 
     @Override
     public void dispose() {
         startScreenTexture.dispose();
         font.dispose();
+        // Detener y liberar la música
+        backgroundMusic.stop();
+        backgroundMusic.dispose();
     }
 }
