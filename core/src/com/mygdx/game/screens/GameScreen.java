@@ -46,7 +46,6 @@ public class GameScreen implements Screen {
     private static final float CACODAEMON_SPAWN_TIMER = 10f;
 
     private static final float RANA_SPAWN_INTERVAL = 10f;
-    private static boolean player1;
 
 
     public GameScreen(SpriteBatch batch) {
@@ -62,7 +61,6 @@ public class GameScreen implements Screen {
         listaRanas = new ArrayList<>();
         listaCacodaemon = new ArrayList<>();
         listaWaterBalls = new ArrayList<>();
-        player1= SocketManager.getCurrentRol();
     }
 
     public void show() {
@@ -113,7 +111,7 @@ public class GameScreen implements Screen {
 
         knightWalk.update(delta);
         // Actualiza el tiempo de cooldown de salto si está activo
-        if(player1==false){
+        if(SocketManager.getRol()=="knight"){
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
                 knightCrouch();
                 SocketManager.emitKnightCrouch();
@@ -135,7 +133,7 @@ public class GameScreen implements Screen {
                 knightJump();
                 SocketManager.emitKnightJump();
             }
-        }else if(player1==true){
+        }else if(SocketManager.getRol()=="witch"){
             if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
                 witchWaterBall();
                 SocketManager.emitWitchBall();
