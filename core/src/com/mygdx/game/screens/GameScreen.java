@@ -44,9 +44,11 @@ public class GameScreen implements Screen {
     private float ranaSpawnTimer = 0f;
     private float cacodaemonSpawnTimer = 0f;
     private static final float CACODAEMON_SPAWN_TIMER = 10f;
-
     private static final float RANA_SPAWN_INTERVAL = 10f;
 
+    private int killedEnemies = 0, numeroRondas = 1, initialEnemies = 3;
+    private float spawnedEnemies = 0;
+    private final double MULTIPLICADOR_ENEMIES_ROUND = 1.3;
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
@@ -121,6 +123,7 @@ public class GameScreen implements Screen {
                         Rana rana = iterator.next();
                         if (knightCrouchAttack.getBounds().overlaps(rana.getBounds())) {
                             rana.setVida(0);
+                            killedEnemies ++;
                         }
                     }
                 }
@@ -215,6 +218,7 @@ public class GameScreen implements Screen {
             Rana rana = iterator.next();
             if (knightAttack.getBounds().overlaps(rana.getBounds())) {
                 rana.setVida(0);
+                killedEnemies++;
             }
         }
 
@@ -237,6 +241,12 @@ public class GameScreen implements Screen {
         knightJump.resetAnimation();
         jumpCooldownActive = true;
         jumpCooldownTimer = JUMP_COOLDOWN_DURATION;
+    }
+
+    public int getNumEnemies(int rondaAnterior) {
+        double resultat;
+        resultat = rondaAnterior * MULTIPLICADOR_ENEMIES_ROUND;
+
     }
     @Override
     public void pause() {}
