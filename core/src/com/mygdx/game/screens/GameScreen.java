@@ -214,7 +214,7 @@ public class GameScreen implements Screen {
 
         cacodaemonSpawnTimer += delta;
         if (cacodaemonSpawnTimer >= CACODAEMON_SPAWN_TIMER) {
-            listaCacodaemon.add(new Cacodaemon(new Vector2(300,700)));
+            listaCacodaemon.add(new Cacodaemon(new Vector2(300,700), 100));
             cacodaemonSpawnTimer = 0f;
         }
         isRenderingAttack = isAttacking;
