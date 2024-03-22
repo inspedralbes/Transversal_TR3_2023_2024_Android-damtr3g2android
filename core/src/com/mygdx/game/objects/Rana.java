@@ -27,7 +27,7 @@ public class Rana {
     private static final float FRAME_DURATION = 0.3f;
     private static final float DESAPARECER_IZQUIERDA = 200f;
 
-    private static final float SPEED = 2000f;
+    public static float SPEED = 2000f;
 
     private float stateTime;
     private boolean isAttacking;
@@ -170,5 +170,13 @@ public class Rana {
 
     public Rectangle getBounds() {
         return new Rectangle(position.x, position.y, FRAME_WIDTH, FRAME_WIDTH);
+    }
+
+    public static float getSPEED() {
+        return SPEED;
+    }
+
+    public static void setSPEED(float SPEED) {
+        Rana.SPEED = SPEED;
     }
 }
