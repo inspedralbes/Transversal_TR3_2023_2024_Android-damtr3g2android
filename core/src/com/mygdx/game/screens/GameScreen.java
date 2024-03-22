@@ -72,11 +72,6 @@ public class GameScreen implements Screen {
             public void run() {
                 System.out.println("Hola");
 
-                for(int i=0; i<listaRanas.size(); i++){
-                    Rana rana = listaRanas.get(i);
-                    rana.setSPEED(rana.getSPEED()+1000);
-                }
-
             }
         }, 0, 2);
         SocketManager.addKnightAttackListener(this);
