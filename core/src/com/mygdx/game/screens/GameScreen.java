@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.SocketManager;
 import com.mygdx.game.objects.Cacodaemon;
 import com.mygdx.game.objects.Rana;
 import com.mygdx.game.objects.WaterBall;
