@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.google.gson.*;
 
 public class WaterBall {
 
@@ -20,6 +21,7 @@ public class WaterBall {
     private float stateTime = 0;
     private int currentFrameIndex = 0;
     private Vector2 position;
+
     public WaterBall(Vector2 position) {
         this.position = position;
         Texture spriteSheet = new Texture(Gdx.files.internal("WaterSpell/waterballspell.png"));
