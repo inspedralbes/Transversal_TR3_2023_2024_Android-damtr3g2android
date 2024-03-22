@@ -34,7 +34,7 @@ public class GameShop implements Screen {
         // Define las áreas de los botones
         buttonBounds = new Rectangle[5];
         float buttonWidth = Gdx.graphics.getWidth() / 5;
-        float buttonHeight = Gdx.graphics.getHeight() / 5;
+        float buttonHeight = Gdx.graphics.getHeight() / 10;
         float buttonY = (Gdx.graphics.getHeight() - buttonHeight) / 2;
 
         for (int i = 0; i < buttonBounds.length; i++) {
@@ -74,16 +74,17 @@ public class GameShop implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // Reajusta el tamaño y la posición de los botones al cambiar el tamaño de la ventana
-        float buttonWidth = width / 5;
-        float buttonHeight = height / 5;
+        // Define el tamaño y la posición de los botones al cambiar el tamaño de la ventana
+        float buttonWidth = width / 7; // Menos ancho
+        float buttonHeight = height / 3; // Más alto
+        float buttonX = (width - buttonWidth * 5 - 40) / 2; // Menos ancho
         float buttonY = (height - buttonHeight) / 2;
 
         for (int i = 0; i < buttonBounds.length; i++) {
-            float buttonX = i * (buttonWidth + 10) + 10;
-            buttonBounds[i].set(buttonX, buttonY, buttonWidth, buttonHeight);
+            buttonBounds[i].set(buttonX + i * (buttonWidth + 10), buttonY, buttonWidth, buttonHeight);
         }
     }
+
 
     @Override
     public void show() {
