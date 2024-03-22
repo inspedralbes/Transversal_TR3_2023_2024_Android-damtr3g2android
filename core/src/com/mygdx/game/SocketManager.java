@@ -3,9 +3,6 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.screens.GameScreen;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -15,7 +12,8 @@ public class SocketManager {
     private static final String SERVER_URL = "http://localhost:3001"; // Cambia la dirección IP al servidor Node.js
     private static Socket socket;
     private static String currentRoom;
-    public static String rol;
+
+    private static boolean player1;
     public static void connect() {
         try {
             socket = IO.socket(SERVER_URL);
@@ -35,51 +33,42 @@ public class SocketManager {
         socket.on("startGame", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                JSONObject roles = (JSONObject) args[0];
-                // Lógica para cambiar a la pantalla de juego y manejar los roles
+                // Lógica para cambiar a la pantalla de juego
                 Gdx.app.postRunnable(new Runnable() {
                     @Override
                     public void run() {
-
-                        String knightId = null;
-                        try {
-                            knightId = roles.getString("knight");
-                            String witchId = roles.getString("witch");
-                            if (socket.id().equals(knightId)) {
-                                System.out.println("Knight");
-                                setRol("knight");
-                                ((MyGdxGame) Gdx.app.getApplicationListener()).changeScreen(MyGdxGame.GAME_SCREEN);
-
-                            } else if (socket.id().equals(witchId)) {
-                                System.out.println("Witch");
-                                setRol("witch");
-                                ((MyGdxGame) Gdx.app.getApplicationListener()).changeScreen(MyGdxGame.GAME_SCREEN);
-
-                            }
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-
+                        ((MyGdxGame) Gdx.app.getApplicationListener()).changeScreen(MyGdxGame.GAME_SCREEN);
                     }
                 });
             }
         });
     }
 
-
     public static void createRoom(String roomName) {
         socket.emit("createRoom", roomName);
         setCurrentRoom(roomName);
+        setCurrentRol("knight");
     }
 
     public static void joinRoom(String roomName) {
         socket.emit("joinRoom", roomName);
         socket.emit("message", "HOLAAAAAAAAA");
         setCurrentRoom(roomName);
+        setCurrentRol("witch");
 
     }
 
+    public static void setCurrentRol(String rol){
+        if(rol=="knight"){
+            player1=true;
+        }else if(rol=="witch"){
+            player1=false;
+        }
+    }
 
+    public static boolean getCurrentRol(){
+        return player1;
+    }
 
     public static void emitKnightAttack(){
         socket.emit("knightAttack", getCurrentRoom());
@@ -158,15 +147,6 @@ public class SocketManager {
     }
     public static Socket getSocket() {
         return socket;
-    }
-
-
-    public static String getRol() {
-        return rol;
-    }
-
-    public static void setRol(String rol) {
-        SocketManager.rol = rol;
     }
 
     public static void setCurrentRoom(String roomName) {
