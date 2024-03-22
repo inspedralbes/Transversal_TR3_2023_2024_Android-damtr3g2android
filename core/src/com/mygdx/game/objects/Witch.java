@@ -12,7 +12,6 @@ public class Witch {
     private int currentFrameIndex;
     private Vector2 position;
     private Rectangle bounds;
-    private int vida;
 
     private static final int FRAME_WIDTH = 48;
     private static final int FRAME_HEIGHT = 48;
@@ -21,7 +20,7 @@ public class Witch {
 
     private float stateTime;
 
-    public Witch(Vector2 position, int vidaInicial) {
+    public Witch(Vector2 position) {
         // Cargar el spritesheet desde el archivo interno witch.png
         Texture spriteSheet = new Texture(Gdx.files.internal("Witch/B_witch_charge.png"));
 
@@ -32,19 +31,10 @@ public class Witch {
         for (int i = 0; i < FRAMES_IN_COLUMN; i++) {
             frames[i] = new TextureRegion(spriteSheet, 0, i * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
         }
-        this.vida = vidaInicial;
+
         this.position = position;
         this.bounds = new Rectangle(position.x, position.y, FRAME_WIDTH, FRAME_HEIGHT);
     }
-
-    public int getVida() {
-        return vida;
-    }
-
-    public void setVida(int vida) {
-        this.vida = vida;
-    }
-
 
     public void update(float delta) {
         // Actualizar el tiempo de estado para controlar la animación
