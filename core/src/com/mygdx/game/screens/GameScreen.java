@@ -25,6 +25,8 @@ import java.util.List;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+
 
 public class GameScreen implements Screen {
     private final SpriteBatch batch;
@@ -47,6 +49,14 @@ public class GameScreen implements Screen {
 
     private static final float RANA_SPAWN_INTERVAL = 10f;
 
+    private float elapsedTime = 0f;
+    private static final float TIENDA_INTERVAL = 10f;
+    private BitmapFont font;
+    private boolean isRenderingAttack = false;
+    private boolean isRenderingCrouch = false;
+    private boolean isRenderingJump = false;
+    private boolean knightDead = false;
+    private static final String DEATH_MESSAGE = "Has muerto. Presiona cualquier tecla para reiniciar.";
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
@@ -61,6 +71,8 @@ public class GameScreen implements Screen {
         listaRanas = new ArrayList<>();
         listaCacodaemon = new ArrayList<>();
         listaWaterBalls = new ArrayList<>();
+        font = new BitmapFont();
+
     }
 
     public void show() {
@@ -78,6 +90,11 @@ public class GameScreen implements Screen {
         batch.begin();
         background.draw(batch);
         witch.render(batch);
+
+        if (knightDead) {
+            renderDeathMessage();
+            return;
+        }
         if (isCrouched && isAttacking) {
             knightCrouchAttack.render(batch);
 
@@ -92,6 +109,9 @@ public class GameScreen implements Screen {
         } else {
             knightWalk.render(batch);
         }
+        //barres de vida
+        font.draw(batch, "Knight Life: " + knightWalk.getVida(), 20, Gdx.graphics.getHeight() - 20);
+        font.draw(batch, "Witch Life: " + witch.getVida(), 20, Gdx.graphics.getHeight() - 40);
         for (Rana rana : listaRanas) {
             rana.render(batch);
         }
@@ -106,6 +126,7 @@ public class GameScreen implements Screen {
     }
 
     private void update(float delta) {
+        elapsedTime += delta;
         background.update(delta);
         witch.update(delta);
 
@@ -167,7 +188,18 @@ public class GameScreen implements Screen {
         }
         for (Rana rana : listaRanas) {
             rana.update(delta);
+            if (isCrouched && rana.isAttacking() && rana.getDamageDealt() < 10 && knightCrouch.getBounds().overlaps(rana.getBounds())) {
+                knightCrouch.setVida(knightCrouch.getVida() - 10);
+                rana.addDamageDealt(10); // Actualizar el daño total infligido
+            } else if (!isCrouched && rana.isAttacking() && rana.getDamageDealt() < 10 && knightWalk.getBounds().overlaps(rana.getBounds())) {
+                knightWalk.setVida(knightWalk.getVida() - 10);
+                rana.addDamageDealt(10); // Actualizar el daño total infligido
+            }
+            if (rana.isAnimationFinished()) {
+                rana.resetDamageDealt();
+            }
         }
+
         for (Cacodaemon cacodaemon : listaCacodaemon) {
             cacodaemon.update(delta);
         }
@@ -185,7 +217,9 @@ public class GameScreen implements Screen {
             listaCacodaemon.add(new Cacodaemon(new Vector2(300,700)));
             cacodaemonSpawnTimer = 0f;
         }
-
+        isRenderingAttack = isAttacking;
+        isRenderingCrouch = isCrouched;
+        isRenderingJump = isJumping;
         // Generar WaterBalls cuando se presiona la tecla 'T'
 
         for (Iterator<Cacodaemon> cacodaemonIterator = listaCacodaemon.iterator(); cacodaemonIterator.hasNext();) {
@@ -201,6 +235,15 @@ public class GameScreen implements Screen {
                 }
             }
         }
+        // Verificar si la vida del Knight llega a 0
+        if (knightWalk.getVida() <= 0) {
+            knightDead = true;
+        }
+    }
+    private void renderDeathMessage() {
+        batch.begin();
+        font.draw(batch, DEATH_MESSAGE, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() / 2);
+        batch.end();
     }
 
     @Override
@@ -267,6 +310,8 @@ public class GameScreen implements Screen {
             cacodaemon.dispose();
         }
         listaCacodaemon.clear(); // Limpiar la lista de Cacodaemons
+        font.dispose();
+
     }
 
 }
