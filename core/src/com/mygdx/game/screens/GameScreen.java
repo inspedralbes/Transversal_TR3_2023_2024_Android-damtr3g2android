@@ -46,6 +46,10 @@ public class GameScreen implements Screen {
     private static final float CACODAEMON_SPAWN_TIMER = 10f;
 
     private static final float RANA_SPAWN_INTERVAL = 10f;
+    private float elapsedTime = 0f;
+    private static final float TIENDA_INTERVAL = 10f;
+    private BitmapFont font;
+
 
 
     public GameScreen(SpriteBatch batch) {
@@ -61,6 +65,7 @@ public class GameScreen implements Screen {
         listaRanas = new ArrayList<>();
         listaCacodaemon = new ArrayList<>();
         listaWaterBalls = new ArrayList<>();
+        font = new BitmapFont();
     }
 
     public void show() {
@@ -146,14 +151,13 @@ public class GameScreen implements Screen {
                 jumpCooldownActive = false;
             }
         }
-
         if (isAttacking) {
             knightAttack.update(delta);
             if (knightAttack.isAnimationFinished()) {
                 isAttacking = false;
             }
         }
-
+      
         if (isJumping) {
             knightJump.updateSalto(delta);
             if (knightJump.isAnimationFinished()) {
@@ -186,8 +190,7 @@ public class GameScreen implements Screen {
             cacodaemonSpawnTimer = 0f;
         }
 
-        // Generar WaterBalls cuando se presiona la tecla 'T'
-
+       
         for (Iterator<Cacodaemon> cacodaemonIterator = listaCacodaemon.iterator(); cacodaemonIterator.hasNext();) {
             Cacodaemon cacodaemon = cacodaemonIterator.next();
             for (Iterator<WaterBall> waterBallIterator = listaWaterBalls.iterator(); waterBallIterator.hasNext();) {
