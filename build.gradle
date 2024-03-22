@@ -75,5 +75,6 @@ project(":core") {
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation 'io.socket:socket.io-client:2.0.0'
+        implementation 'com.google.code.gson:gson:2.8.8'
     }
 }

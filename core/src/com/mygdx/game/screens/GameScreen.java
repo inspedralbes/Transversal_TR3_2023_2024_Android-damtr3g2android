@@ -56,6 +56,7 @@ public class GameScreen implements Screen {
     private boolean knightDead = false;
     private static final String DEATH_MESSAGE = "Has muerto. Presiona cualquier tecla para reiniciar.";
 
+
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
         background = new Background();
@@ -76,6 +77,7 @@ public class GameScreen implements Screen {
         SocketManager.addKnightAttackListener(this);
         SocketManager.addKnightJumpListener(this);
         SocketManager.addKnightCrouch(this);
+        SocketManager.addWitchWaterBallListener(this);
     }
 
     @Override
@@ -211,9 +213,20 @@ public class GameScreen implements Screen {
             cacodaemonSpawnTimer = 0f;
         }
 
-        isRenderingAttack = isAttacking;
-        isRenderingCrouch = isCrouched;
-        isRenderingJump = isJumping;
+        // Generar WaterBalls cuando se presiona la tecla 'T'
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+            witchWaterBall();
+            SocketManager.emitWitchBall();
+        }
+        for (Iterator<Cacodaemon> cacodaemonIterator = listaCacodaemon.iterator(); cacodaemonIterator.hasNext();) {
+            Cacodaemon cacodaemon = cacodaemonIterator.next();
+            for (Iterator<WaterBall> waterBallIterator = listaWaterBalls.iterator(); waterBallIterator.hasNext();) {
+                WaterBall waterBall = waterBallIterator.next();
+                if (cacodaemon.getBounds().overlaps(waterBall.getBounds())) {
+                    // Colisión detectada, realiza las acciones necesarias
+                    // Por ejemplo, eliminar la WaterBall y reducir la vida del Cacodaemon
+                    waterBallIterator.remove(); // Elimina la WaterBall
+                    cacodaemon.dispose(); // Reducción de la vida del Cacodaemon
 
         // Verificar si la vida del Knight llega a 0
         if (knightWalk.getVida() <= 0) {
@@ -242,6 +255,15 @@ public class GameScreen implements Screen {
             }
         }
 
+    }
+    public void witchWaterBall() {
+        WaterBall newWaterball = createWaterBall(); // Crear una nueva WaterBall
+        listaWaterBalls.add(newWaterball); // Agregar la nueva WaterBall a la lista
+    }
+
+    public WaterBall createWaterBall() {
+        Vector2 waterballPosition = new Vector2(120, 750); // Ajusta la posición según necesites
+        return new WaterBall(waterballPosition);
     }
 
     public void knightCrouch(){

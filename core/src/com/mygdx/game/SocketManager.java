@@ -66,9 +66,34 @@ public class SocketManager {
 
     public static void emitKnightCrouch(){
         socket.emit("knightCrouch", getCurrentRoom());
-
     }
 
+    public static void emitWitchBall() {
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                socket.emit("witchWaterBall", getCurrentRoom());
+            }
+        });
+    }
+
+    public static void addWitchWaterBallListener(GameScreen gameScreen) {
+        socket.on("witchWaterBalling", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        gameScreen.witchWaterBall();
+                        // Aquí maneja la respuesta del servidor
+                        // Por ejemplo, puedes imprimir la respuesta en la consola
+                        System.out.println("Respuesta del servidor: ");
+                        // También puedes hacer otras operaciones según la respuesta del servidor
+                    }
+                });
+            }
+        });
+    }
     public static void addKnightAttackListener(GameScreen gameScreen){
         socket.on("knightAttacking", new Emitter.Listener() {
             @Override
@@ -87,7 +112,7 @@ public class SocketManager {
             @Override
             public void call(Object... args) {
                 gameScreen.knightCrouch();
-                 // Aquí maneja la respuesta del servidor
+                // Aquí maneja la respuesta del servidor
                 // Por ejemplo, puedes imprimir la respuesta en la consola
                 System.out.println("Respuesta del servidor: ");
                 // También puedes hacer otras operaciones según la respuesta del servidor
