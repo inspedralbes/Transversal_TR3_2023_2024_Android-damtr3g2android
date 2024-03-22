@@ -16,7 +16,6 @@ import io.socket.client.Socket;
 
 
 public class GameShop implements Screen {
-
     private static final String SERVER_URL = "http://localhost:3001"; // Cambia la dirección IP al servidor Node.js
     private static Socket socket;
 
@@ -26,7 +25,23 @@ public class GameShop implements Screen {
     private Rectangle[] buttons;
     private String userInput = ""; // Para almacenar la entrada de texto
 
+    public static void connect() {
+        try {
+            socket = IO.socket(SERVER_URL);
+            socket.connect();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 
+
+    
+
+    public static void disconnect() {
+        if (socket != null && socket.connected()) {
+            socket.disconnect();
+        }
+    }
 
     public GameShop(SpriteBatch batch) {
         this.batch = batch;
