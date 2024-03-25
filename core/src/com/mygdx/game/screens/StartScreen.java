@@ -2,6 +2,7 @@ package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -29,6 +30,15 @@ public class StartScreen implements Screen {
     private Stage stage;
     private TextField textField;
 
+    //Musica
+    private Rectangle pauseButton;
+    private Music backgroundMusic;
+    private boolean isMusicPaused = false;
+
+    //Tienda
+    private Rectangle tiendaButton;
+
+
     public StartScreen(SpriteBatch batch) {
         this.batch = batch;
         createTextField();
@@ -42,6 +52,25 @@ public class StartScreen implements Screen {
         startButton = new Rectangle(buttonX, buttonY + 100, buttonWidth, buttonHeight);
         createRoomButton = new Rectangle(buttonX, buttonY - 50, buttonWidth, buttonHeight);
         joinRoomButton = new Rectangle(buttonX, buttonY - 200, buttonWidth, buttonHeight);
+
+        //Botones Musica
+        float pauseButtonWidth = Gdx.graphics.getWidth() / 4;
+        float pauseButtonHeight = Gdx.graphics.getHeight() / 15;
+        float pauseButtonX = (Gdx.graphics.getWidth() - pauseButtonWidth) / 2;
+        float pauseButtonY = (Gdx.graphics.getHeight() - pauseButtonHeight) / 4;
+        pauseButton = new Rectangle(pauseButtonX, pauseButtonY, pauseButtonWidth, pauseButtonHeight);
+
+        //Boton Tienda
+        float tiendaButtonWidth = Gdx.graphics.getWidth() / 4;
+        float tiendaButtonHeight = Gdx.graphics.getHeight() / 15;
+        float tiendaButtonX = (Gdx.graphics.getWidth() - tiendaButtonWidth) / 2;
+        float tiendaButtonY = (Gdx.graphics.getHeight() - tiendaButtonHeight) / 3;
+        tiendaButton = new Rectangle(tiendaButtonX, tiendaButtonY, tiendaButtonWidth, tiendaButtonHeight);
+
+        // Cargar la música de fondo
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music/dragon-ball.mp3"));
+        backgroundMusic.setLooping(true); // Para reproducir la música en bucle
+        backgroundMusic.play(); // Comenzar a reproducir la música
     }
 
     private void createTextField() {
@@ -115,6 +144,12 @@ public class StartScreen implements Screen {
         font.draw(batch, "Start Game", startButton.x, startButton.y + startButton.height);
         font.draw(batch, "Create Room", createRoomButton.x, createRoomButton.y + createRoomButton.height);
         font.draw(batch, "Join Room", joinRoomButton.x, joinRoomButton.y + joinRoomButton.height);
+
+        // Dibuja el texto del botón de pausa
+        font.draw(batch, isMusicPaused ? "Resume Music" : "Pause Music", pauseButton.x, pauseButton.y + pauseButton.height);
+
+        // Dibuja el texto del nuevo botón
+        font.draw(batch, "Tienda", tiendaButton.x, tiendaButton.y + tiendaButton.height);
         batch.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
